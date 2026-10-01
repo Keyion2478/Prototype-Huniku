@@ -138,8 +138,24 @@ class AppController {
     const txt = document.getElementById("systemToastText");
     if (toast && txt) {
       txt.innerText = msg;
+      
+      // Hapus timeout sebelumnya jika ada yang sedang berjalan
+      if (this.toastTimeout) {
+        clearTimeout(this.toastTimeout);
+      }
+      
       toast.classList.add("is-shown");
-      setTimeout(() => toast.classList.remove("is-shown"), 2200);
+      
+      // Jeda waktu 5 detik (5000ms) sebelum notifikasi menghilang
+      this.toastTimeout = setTimeout(() => {
+        toast.classList.remove("is-shown");
+      }, 5000);
+
+      // Klik langsung untuk menutup tanpa menunggu 5 detik
+      toast.onclick = () => {
+        toast.classList.remove("is-shown");
+        if (this.toastTimeout) clearTimeout(this.toastTimeout);
+      };
     }
   }
 

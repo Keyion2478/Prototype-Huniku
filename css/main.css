@@ -401,24 +401,35 @@ body {
 /* TOAST */
 .system-toast-alert {
   position: absolute;
-  top: 48px;
+  top: 18px;
   left: 50%;
-  transform: translateX(-50%) translateY(-60px);
-  background: #111720;
-  color: #f1f5f9;
-  border: 1px solid #2d3846;
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  font-size: 0.74rem;
-  font-weight: 600;
-  box-shadow: var(--shadow-card);
-  z-index: 200;
-  transition: transform 0.25s ease;
-  white-space: nowrap;
+  transform: translateX(-50%) translateY(-24px);
+  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
+  background: rgba(17, 23, 32, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #f1f5f9;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 18px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  z-index: 999;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+  white-space: nowrap;
+  max-width: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .system-toast-alert.is-shown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
   transform: translateX(-50%) translateY(0);
 }
 
