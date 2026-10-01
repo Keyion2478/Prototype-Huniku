@@ -863,13 +863,21 @@
             <section class="view-screen" id="viewAdminMaster">
               <div class="admin-workspace-wrap">
                 <!-- Left Sidebar Navigation -->
-                <aside class="admin-sidebar">
+                <aside class="admin-sidebar" id="adminSidebar">
                   <div class="admin-sidebar-header">
-                    <div class="admin-avatar-box">H</div>
-                    <div>
-                      <div style="font-size: 0.82rem; font-weight: 800; color: #f8fafc;">Huniku Admin</div>
-                      <div style="font-size: 0.65rem; color: #10b981; font-weight: 600;">Developer & Estate Suite</div>
+                    <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+                      <div class="admin-avatar-box">H</div>
+                      <div>
+                        <div style="font-size: 0.82rem; font-weight: 800; color: #f8fafc;">Huniku Admin</div>
+                        <div style="font-size: 0.65rem; color: #10b981; font-weight: 600;">Developer & Estate Suite</div>
+                      </div>
                     </div>
+                    <button type="button" class="btn-sidebar-close" onclick="toggleAdminSidebar()" title="Sembunyikan Sidebar">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
                   </div>
 
                   <div class="admin-nav-list">
@@ -919,14 +927,24 @@
                 <main class="admin-main-stage">
                   <!-- Top Banner -->
                   <div class="admin-top-banner">
-                    <div>
-                      <h3 id="adminPageHeaderTitle">Manajemen Inventaris Kavling</h3>
-                      <p id="adminPageHeaderSubtitle">Kontrol ketersediaan unit real-time, spesifikasi, dan skema pembiayaan perumahan.</p>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <!-- Tombol Burger Menu Toggle Sidebar -->
+                      <button type="button" class="btn-sidebar-toggle" id="btnAdminSidebarToggle" onclick="toggleAdminSidebar()" title="Sembunyikan/Tampilkan Menu Sidebar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                          <line x1="3" y1="12" x2="21" y2="12"></line>
+                          <line x1="3" y1="6" x2="21" y2="6"></line>
+                          <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                      </button>
+                      <div>
+                        <h3 id="adminPageHeaderTitle">Manajemen Inventaris Kavling</h3>
+                        <p id="adminPageHeaderSubtitle">Kontrol ketersediaan unit real-time, spesifikasi, dan skema pembiayaan perumahan.</p>
+                      </div>
                     </div>
-                    <div style="display: flex; gap: 10px; align-items: center;">
+                    <div class="admin-top-actions-row">
                       <!-- Pusat Notifikasi Badge Lonceng Admin -->
-                      <div class="admin-notification-bell-wrap">
-                        <button type="button" class="btn-admin-bell" id="btnAdminNotifBell" onclick="toggleAdminNotifPopover()" title="Pusat Notifikasi Aktivitas Admin">
+                      <div class="admin-notification-bell-wrap" id="adminNotifBellWrap">
+                        <button type="button" class="btn-admin-bell" id="btnAdminNotifBell" onclick="toggleAdminNotifPopover(event)" title="Pusat Notifikasi Aktivitas Admin">
                           <span style="font-size: 1.1rem;">🔔</span>
                           <span class="admin-bell-badge" id="adminNotifBadge">0</span>
                         </button>
@@ -1723,14 +1741,14 @@
   </div>
 
   <!-- Modular Scripts Architecture -->
-  <script src="js/store.js?v=20261001_5"></script>
-  <script src="js/catalog.js?v=20261001_5"></script>
-  <script src="js/booking.js?v=20261001_5"></script>
-  <script src="js/chat.js?v=20261001_5"></script>
-  <script src="js/resident.js?v=20261001_5"></script>
-  <script src="js/admin.js?v=20261001_5"></script>
-  <script src="js/companion.js?v=20261001_5"></script>
-  <script src="js/app.js?v=20261001_5"></script>
+  <script src="js/store.js?v=20261001_6"></script>
+  <script src="js/catalog.js?v=20261001_6"></script>
+  <script src="js/booking.js?v=20261001_6"></script>
+  <script src="js/chat.js?v=20261001_6"></script>
+  <script src="js/resident.js?v=20261001_6"></script>
+  <script src="js/admin.js?v=20261001_6"></script>
+  <script src="js/companion.js?v=20261001_6"></script>
+  <script src="js/app.js?v=20261001_6"></script>
 
 </body>
 </html>

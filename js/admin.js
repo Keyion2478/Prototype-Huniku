@@ -13,15 +13,51 @@ let currentAdminTab = "inventory";
 let activeBapTicketId = null;
 let activeBastUnitId = null;
 
-function toggleAdminNotifPopover() {
+function toggleAdminSidebar() {
+  const sidebar = document.getElementById("adminSidebar");
+  if (!sidebar) return;
+  sidebar.classList.toggle("collapsed");
+  const isCollapsed = sidebar.classList.contains("collapsed");
+  try {
+    localStorage.setItem("huniku_admin_sidebar_collapsed", isCollapsed ? "1" : "0");
+  } catch(e) {}
+}
+
+function toggleAdminNotifPopover(e) {
+  if (e) e.stopPropagation();
   const popover = document.getElementById("adminNotifPopover");
+  const bell = document.getElementById("btnAdminNotifBell");
   if (!popover) return;
+
   const isHidden = popover.style.display === "none";
-  popover.style.display = isHidden ? "block" : "none";
   if (isHidden) {
+    if (bell) {
+      const rect = bell.getBoundingClientRect();
+      // Jika tombol bell berada di sebelah kiri atau dekat batas layar kiri (kurang dari 340px)
+      // Buat popover membuka ke kanan (align-left) agar tidak menabrak sidebar!
+      if (rect.left < 340) {
+        popover.classList.add("align-left");
+      } else {
+        popover.classList.remove("align-left");
+      }
+    }
+    popover.style.display = "block";
     renderAdminNotifList();
+  } else {
+    popover.style.display = "none";
   }
 }
+
+// Tutup popover jika pengguna mengklik di luar area popover
+document.addEventListener("click", (e) => {
+  const popover = document.getElementById("adminNotifPopover");
+  const bell = document.getElementById("btnAdminNotifBell");
+  if (popover && popover.style.display !== "none") {
+    if (!popover.contains(e.target) && (!bell || !bell.contains(e.target))) {
+      popover.style.display = "none";
+    }
+  }
+});
 
 function renderAdminNotifList() {
   const target = document.getElementById("adminNotifListTarget");
@@ -179,6 +215,15 @@ function renderAdminDesk() {
   if (notifTag) {
     notifTag.innerText = `${totalNotif} Baru`;
   }
+
+  // Restore collapsed sidebar state
+  try {
+    const isCollapsed = localStorage.getItem("huniku_admin_sidebar_collapsed") === "1";
+    const sidebar = document.getElementById("adminSidebar");
+    if (sidebar) {
+      sidebar.classList.toggle("collapsed", isCollapsed);
+    }
+  } catch(e) {}
 
   // Render Sub-Views
   renderAdminUnitsTable();
