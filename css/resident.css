@@ -1,0 +1,420 @@
+/*
+  HUNIKU - RESIDENT COMPLAINTS & WARRANTY MANAGEMENT STYLING
+*/
+
+.resident-profile-banner {
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--border-mid);
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.category-chips-matrix {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin: 6px 0 12px;
+}
+
+.chip-selector-btn {
+  background: var(--surface-card);
+  border: 1.5px solid var(--border-mid);
+  padding: 9px 10px;
+  border-radius: var(--radius-xs);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.chip-selector-btn:hover {
+  border-color: var(--brand-accent);
+  color: var(--text-main);
+}
+
+.chip-selector-btn.active {
+  background: var(--brand-primary-light);
+  border-color: var(--brand-accent);
+  color: var(--brand-primary);
+}
+
+.form-field-unit {
+  margin-bottom: 14px;
+}
+
+.form-field-unit label {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.field-input-control {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius-xs);
+  border: 1.5px solid var(--border-mid);
+  background: var(--surface-card);
+  font-size: 0.78rem;
+  font-family: var(--font-sans);
+  color: var(--text-main);
+  outline: none;
+  resize: vertical;
+}
+
+.field-input-control:focus {
+  border-color: var(--brand-accent);
+}
+
+/* RESIDENT TICKETS FEED */
+.resident-ticket-card {
+  background: var(--surface-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.ticket-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.ticket-id {
+  font-size: 0.72rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--brand-primary);
+}
+
+.ticket-desc {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.ticket-resolution {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+/* PROGRESS STEPPER */
+.stepper-bar-wrap {
+  margin: 8px 0;
+}
+
+.stepper-segments {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.step-segment {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-mid);
+}
+
+.step-segment.done {
+  background: #2b8a3e;
+}
+
+.step-segment.active {
+  background: #e67700;
+}
+
+.stepper-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.ticket-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-light);
+  padding-top: 8px;
+  margin-top: 6px;
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+}
+
+/* TICKET DIRECT CHAT ACTION BAR */
+.ticket-action-bar {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-mid);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.ticket-action-hint {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-ticket-chat {
+  background: var(--brand-primary-light);
+  border: 1px solid #b2f2bb;
+  color: var(--brand-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn-ticket-chat svg,
+.btn-ticket-chat path {
+  pointer-events: none !important;
+}
+
+.btn-ticket-chat:hover {
+  background: #d3f9d8;
+  border-color: var(--brand-accent);
+  transform: translateY(-1px);
+}
+
+.btn-ticket-chat:active {
+  transform: scale(0.96);
+  background: #b2f2bb;
+}
+
+.ticket-chat-badge {
+  background: #2b8a3e;
+  color: #ffffff;
+  font-size: 0.58rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 999px;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+/* RESIDENT DASHBOARD & STATS */
+.resident-kpi-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 18px 14px;
+}
+
+.resident-kpi-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-xs);
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.resident-kpi-card .num {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--brand-primary);
+  line-height: 1.1;
+}
+
+.resident-kpi-card .lbl {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.resident-kpi-card.progress .num {
+  color: #d97706;
+}
+
+.resident-kpi-card.resolved .num {
+  color: #16a34a;
+}
+
+/* HERO ACTION CARD (BUAT PENGADUAN BARU) */
+.resident-action-hero-card {
+  background: linear-gradient(135deg, #153e2d 0%, #0d281c 100%);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin: 0 18px 16px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 4px 14px rgba(21, 62, 45, 0.22);
+}
+
+.hero-action-text h4 {
+  font-size: 0.92rem;
+  font-weight: 800;
+  margin-bottom: 3px;
+  color: #ffffff;
+}
+
+.hero-action-text p {
+  font-size: 0.7rem;
+  color: #bbf7d0;
+  line-height: 1.35;
+}
+
+.btn-open-complaint {
+  background: #ffffff;
+  color: #153e2d;
+  font-weight: 800;
+  font-size: 0.74rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-xs);
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-open-complaint:hover {
+  background: #f0fdf4;
+  transform: translateY(-1px);
+}
+
+/* FILTER TABS RIWAYAT */
+.resident-filter-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 18px 12px;
+  overflow-x: auto;
+}
+
+.resident-filter-pill {
+  background: var(--surface-card);
+  border: 1px solid var(--border-mid);
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.resident-filter-pill:hover {
+  border-color: var(--brand-accent);
+  color: var(--text-main);
+}
+
+.resident-filter-pill.active {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+/* COMPLAINT MODAL */
+.complaint-modal-card {
+  background: var(--surface-card);
+  width: 92%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: var(--radius-md);
+  padding: 22px;
+  border: 1px solid var(--border-mid);
+  box-shadow: var(--shadow-float);
+  position: relative;
+  animation: modalPopIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.visit-pref-chips {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.visit-chip {
+  background: #f8fafc;
+  border: 1px solid var(--border-mid);
+  padding: 8px 6px;
+  border-radius: var(--radius-xs);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.visit-chip.active {
+  background: var(--brand-primary-light);
+  border-color: var(--brand-accent);
+  color: var(--brand-primary);
+}
+
+.custom-time-input-box {
+  margin-top: 8px;
+  background: #f8fafc;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-xs);
+  padding: 10px 12px;
+}
+
+
+/* EMPTY STATE */
+.resident-empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  background: var(--surface-bg);
+  border-radius: 8px;
+  border: 1px dashed var(--border-mid);
+  margin-top: 8px;
+}
+
+.resident-empty-state .icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.resident-empty-state .title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.resident-empty-state .sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+

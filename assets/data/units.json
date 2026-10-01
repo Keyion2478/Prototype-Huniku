@@ -1,0 +1,111 @@
+[
+  {
+    "id": "unit-1",
+    "code": "BLOK A-01",
+    "cluster": "Grand Alessandra Residence",
+    "region": "Sukarame, Bandar Lampung",
+    "type": "Tipe 45 / 90",
+    "price": "Rp 385.000.000",
+    "rawPrice": 385000000,
+    "lb": 45,
+    "lt": 90,
+    "rooms": "2 KT / 1 KM",
+    "foundation": "Batu Belah & Beton Bertulang",
+    "utility": "PLN 1300 VA & Sumur Bor 32m",
+    "legal": "SHM & PBG Lengkap",
+    "status": "AVAILABLE",
+    "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&q=80",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&q=80"
+    ],
+    "desc": "Rumah tunggal bernuansa tropis modern dengan plafon tinggi 3.6m untuk sirkulasi udara alami. Jalan perumahan aspal hotmix row 8 meter, sistem keamanan one gate system 24 jam dengan CCTV kawasan."
+  },
+  {
+    "id": "unit-2",
+    "code": "BLOK B-04",
+    "cluster": "Grand Alessandra Residence",
+    "region": "Sukarame, Bandar Lampung",
+    "type": "Tipe 36 / 78",
+    "price": "Rp 320.000.000",
+    "rawPrice": 320000000,
+    "lb": 36,
+    "lt": 78,
+    "rooms": "2 KT / 1 KM",
+    "foundation": "Batu Belah & Rangka Baja Ringan",
+    "utility": "PLN 1300 VA & Sumur Bor",
+    "legal": "SHM Pecah Per Kavling",
+    "status": "AVAILABLE",
+    "image": "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=800&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80"
+    ],
+    "desc": "Pilihan tepat untuk keluarga muda. Halaman belakang luas 3.5 meter siap untuk perluasan dapur atau taman pribadi. Akses 7 menit dari Kampus IAIN / UIN Raden Intan Lampung dan Gerbang Tol Kotabaru."
+  },
+  {
+    "id": "unit-3",
+    "code": "BLOK C-12",
+    "cluster": "Villa Permata Indah",
+    "region": "Kedaton, Bandar Lampung",
+    "type": "Tipe 54 / 105",
+    "price": "Rp 490.000.000",
+    "rawPrice": 490000000,
+    "lb": 54,
+    "lt": 105,
+    "rooms": "3 KT / 2 KM",
+    "foundation": "Beton Cakar Ayam & Dinding Bata Merah",
+    "utility": "PLN 2200 VA & Sumur Bor",
+    "legal": "SHM & PBG Siap Akad",
+    "status": "BOOKED",
+    "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80"
+    ],
+    "desc": "Unit sudut (hook) dengan pencahayaan alami optimal di kawasan premium Kedaton. Saat ini dalam proses verifikasi berkas KPR oleh analis bank rekanan."
+  },
+  {
+    "id": "unit-4",
+    "code": "BLOK D-09",
+    "cluster": "Sentral Garden Residence",
+    "region": "Natar, Lampung Selatan",
+    "type": "Tipe 36 / 72",
+    "price": "Rp 235.000.000",
+    "rawPrice": 235000000,
+    "lb": 36,
+    "lt": 72,
+    "rooms": "2 KT / 1 KM",
+    "foundation": "Batu Kali",
+    "utility": "PLN 1300 VA & PDAM",
+    "legal": "Agunan Bank - Sita Eksekusi",
+    "status": "DI_SITA_BANK",
+    "image": "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=800&q=80"
+    ],
+    "desc": "Unit agunan kredit macet debitur lama dalam sengketa hukum perbankan. Akses pemesanan dinonaktifkan sistem untuk perlindungan hukum calon pembeli."
+  },
+  {
+    "id": "unit-5",
+    "code": "BLOK B-02",
+    "cluster": "Sentral Garden Residence",
+    "region": "Natar, Lampung Selatan",
+    "type": "Tipe 45 / 84",
+    "price": "Rp 280.000.000",
+    "rawPrice": 280000000,
+    "lb": 45,
+    "lt": 84,
+    "rooms": "2 KT / 1 KM",
+    "foundation": "Batu Belah & Bata Ringan",
+    "utility": "PLN 1300 VA & PDAM",
+    "legal": "SHM Split Murni",
+    "status": "AVAILABLE",
+    "image": "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=800&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1598228723793-52759bba239c?w=800&q=80"
+    ],
+    "desc": "Hunian asri bebas banjir dengan akses cepat ke Bandara Radin Inten II dan Stasiun Rejosari Natar. Program subsidi bunga KPR berlaku untuk unit ini."
+  }
+]

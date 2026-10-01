@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Huniku - Simulasi Antarmuka & Alat Peraga Riset Pengguna</title>
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Modular CSS Architecture -->
+  <link rel="stylesheet" href="css/main.css?v=20261001_4">
+  <link rel="stylesheet" href="css/catalog.css?v=20261001_4">
+  <link rel="stylesheet" href="css/chat.css?v=20261001_4">
+  <link rel="stylesheet" href="css/resident.css?v=20261001_4">
+  <link rel="stylesheet" href="css/admin.css?v=20261001_4">
+  <link rel="stylesheet" href="css/companion.css?v=20261001_4">
+</head>
+<body>
+
+  <!-- TOP TOOLBAR: CONTROL DESK FOR RESEARCHER -->
+  <header class="studio-bar">
+    <div class="studio-title-block">
+      <div class="studio-emblem">H</div>
+      <div>
+        <div class="studio-heading">
+          Huniku Studio <span class="tag">PjBL Research Suite</span>
+        </div>
+        <div class="studio-subheading">Alat Peraga Simulasi & Validasi Lapangan Terpadu (Bandar Lampung)</div>
+      </div>
+    </div>
+
+    <div class="studio-actions">
+      <!-- Role Switcher -->
+      <div class="role-segmented-control">
+        <button class="role-tab-btn active" id="btnRoleBuyer" onclick="window.app.setRole('BUYER')">Calon Pembeli</button>
+        <button class="role-tab-btn" id="btnRoleResident" onclick="window.app.setRole('RESIDENT')">Warga Penghuni</button>
+        <button class="role-tab-btn" id="btnRoleAdmin" onclick="window.app.setRole('ADMIN')">Admin Developer</button>
+      </div>
+
+      <button class="btn-studio-tool" id="btnDeviceToggle" onclick="window.app.toggleDesktopMode()">
+        Mode Desktop
+      </button>
+
+      <button class="btn-studio-tool active-companion" id="btnCompanionToggle" onclick="window.app.toggleCompanionPanel()">
+        Panduan Riset
+      </button>
+
+      <button class="btn-studio-tool" onclick="window.app.resetAllData()" title="Kembalikan data percontohan ke kondisi awal">
+        Reset Data
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE STAGE -->
+  <main class="workspace-stage">
+
+    <!-- DEVICE CONTAINER -->
+    <div class="device-canvas" id="deviceCanvas">
+      <div class="mobile-shell">
+        <div class="screen-surface">
+
+          <!-- System Toast Alert -->
+          <div class="system-toast-alert" id="systemToast">
+            <span id="systemToastText">Notifikasi</span>
+          </div>
+
+          <!-- Status Bar (Mobile Phone) -->
+          <div class="status-bar-phone">
+            <span id="realClock">09:41</span>
+            <div style="width: 60px; height: 16px; background: #0f141a; border-radius: 99px;"></div>
+            <span style="font-family: var(--font-mono); font-size: 0.68rem;">5G • 98%</span>
+          </div>
+
+          <!-- App Top Header Strip -->
+          <div class="app-header-strip">
+            <div class="app-brand-lockup">
+              <button class="nav-back-button" id="btnAppBack" onclick="window.app.handleBack()" style="display: none;">←</button>
+              <h2>Huniku</h2>
+              <span class="sub" id="headerContextLabel">Lampung</span>
+            </div>
+            <div style="font-size: 0.72rem; font-weight: 700; color: var(--brand-accent);" id="headerRoleBadge">Pencarian Unit</div>
+          </div>
+
+          <!-- APP SCROLLABLE VIEWPORT -->
+          <div class="app-scroll-container" id="appScrollViewport">
+
+            <!-- ============================================== -->
+            <!-- 1. VIEW: BUYER CATALOG                        -->
+            <!-- ============================================== -->
+            <section class="view-screen is-active" id="viewCatalog">
+              <div class="editorial-hero">
+                <div class="region-indicator">Kawasan Percontohan Lampung</div>
+                <h3>Pilih Hunian Asri Bebas Risiko Double Booking.</h3>
+                <p>Status ketersediaan unit diverifikasi langsung oleh kantor pemasaran pengembang. Panduan berkas transparan & terhubung ke agen resmi melalui In-App Chat.</p>
+              </div>
+
+              <!-- Filter Bar -->
+              <div class="catalog-filter-bar">
+                <button class="pill-filter is-active" onclick="setCatalogFilter('ALL', this)">Semua Unit</button>
+                <button class="pill-filter" onclick="setCatalogFilter('AVAILABLE', this)">Hanya Tersedia</button>
+                <button class="pill-filter" onclick="setCatalogFilter('TIPE_36', this)">Tipe 36</button>
+                <button class="pill-filter" onclick="setCatalogFilter('TIPE_45', this)">Tipe 45</button>
+                <button class="pill-filter" onclick="setCatalogFilter('TIPE_54', this)">Tipe 54</button>
+              </div>
+
+              <!-- Units Flow Container -->
+              <div class="units-flow-container" id="catalogListTarget">
+                <!-- Dynamically populated by catalog.js -->
+              </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- 2. VIEW: UNIT DETAIL & SPECS                   -->
+            <!-- ============================================== -->
+            <section class="view-screen" id="viewUnitDetail">
+              <div class="detail-hero-frame">
+                <img id="detailHeroImage" src="" alt="Foto Unit">
+                <div class="detail-gallery-strip" id="detailThumbStrip">
+                  <!-- Thumbnails injected via JS -->
+                </div>
+              </div>
+
+              <div class="detail-content-body">
+                <div class="house-cluster-tag" id="detailClusterCode">BLOK A-01 • GRAND ALESSANDRA</div>
+                <h3 style="font-size: 1.22rem; font-weight: 800; color: var(--text-main); margin: 4px 0 6px;" id="detailName">Tipe 45/90 Minimalis</h3>
+                <div style="font-size: 1.15rem; font-weight: 800; color: var(--brand-primary); margin-bottom: 12px;" id="detailPrice">Rp 385.000.000</div>
+
+                <!-- Mini Financing Calculator Bar -->
+                <div style="background: #f1f8f3; border: 1px solid #d0e7d7; border-radius: var(--radius-xs); padding: 10px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <span style="font-size: 0.65rem; color: #2d6a4f; font-weight: 700; text-transform: uppercase;">Simulasi Angsuran KPR Bank</span>
+                    <div style="font-size: 0.95rem; font-weight: 800; color: var(--brand-primary); margin-top: 1px;" id="detailKprInstallment">Mulai Rp 2,7 Jt / bln</div>
+                  </div>
+                  <div style="font-size: 0.68rem; color: var(--text-muted); text-align: right; line-height: 1.3;">
+                    DP 10% • Bunga 6.5%<br>Tenor 20 Tahun (BTN/Mandiri)
+                  </div>
+                </div>
+
+                <!-- Interactive Mini Site Plan Block -->
+                <div style="background: var(--surface-card); border: 1px solid var(--border-mid); border-radius: var(--radius-xs); padding: 12px 14px; margin-bottom: 16px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 0.74rem; font-weight: 800; color: var(--text-main);">Denah Posisi Kavling di Blok</span>
+                    <span style="font-size: 0.68rem; font-weight: 700; color: var(--brand-accent);" id="detailBlockPositionTag">Blok Terpilih</span>
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 10px; background: var(--surface-subtle); border-radius: var(--radius-xs); border: 1px solid var(--border-light);" id="detailMiniSiteGrid">
+                    <div style="background: #ffffff; border: 1px solid var(--border-mid); padding: 8px 4px; text-align: center; border-radius: 4px; font-size: 0.68rem; font-family: var(--font-mono); font-weight: 700;" id="miniCell1">A-01</div>
+                    <div style="background: #ffffff; border: 1px solid var(--border-mid); padding: 8px 4px; text-align: center; border-radius: 4px; font-size: 0.68rem; font-family: var(--font-mono); font-weight: 700;" id="miniCell2">B-04</div>
+                    <div style="background: #ffffff; border: 1px solid var(--border-mid); padding: 8px 4px; text-align: center; border-radius: 4px; font-size: 0.68rem; font-family: var(--font-mono); font-weight: 700;" id="miniCell3">C-12</div>
+                    <div style="background: #f1f3f5; border: 1px solid #ced4da; color: #868e96; padding: 8px 4px; text-align: center; border-radius: 4px; font-size: 0.68rem; font-family: var(--font-mono); font-weight: 700;" id="miniCell4">D-09</div>
+                  </div>
+                  <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 6px; display: flex; justify-content: space-between;">
+                    <span>Row Jalan Utama 8 Meter</span>
+                    <span style="color: var(--brand-primary); font-weight: 700;">Akses Gerbang Utama</span>
+                  </div>
+                </div>
+
+                <!-- Sita Bank Notice (If applicable) -->
+                <div class="sita-notice-card" id="detailSitaNotice" style="display: none;">
+                  <h4>Unit Tercatat Dalam Sitaan Bank Rekanan</h4>
+                  <p>Unit ini sedang dalam proses inventarisasi dan penyelesaian perbankan. Tombol pemesanan dinonaktifkan untuk melindungi hak calon pembeli dari sengketa hukum.</p>
+                </div>
+
+                <!-- Structured Technical Specs Sheet -->
+                <div class="spec-sheet-panel">
+                  <div class="spec-sheet-title">Spesifikasi Teknis Fisik Bangunan</div>
+                  <div class="spec-sheet-row">
+                    <span class="name">Dimensi & Tipe</span>
+                    <span class="data" id="specDim">Tipe 45 / 90 m²</span>
+                  </div>
+                  <div class="spec-sheet-row">
+                    <span class="name">Luas Bangunan (LB)</span>
+                    <span class="data" id="specLB">45 m²</span>
+                  </div>
+                  <div class="spec-sheet-row">
+                    <span class="name">Luas Tanah (LT)</span>
+                    <span class="data" id="specLT">90 m²</span>
+                  </div>
+                  <div class="spec-sheet-row">
+                    <span class="name">Tata Ruang</span>
+                    <span class="data" id="specRooms">2 Kamar Tidur / 1 Kamar Mandi</span>
+                  </div>
+                  <div class="spec-sheet-row">
+                    <span class="name">Struktur Pondasi</span>
+                    <span class="data" id="specFoundation">Batu Belah & Beton Bertulang</span>
+                  </div>
+                  <div class="spec-sheet-row">
+                    <span class="name">Instalasi Listrik & Air</span>
+                    <span class="data" id="specUtility">PLN 1300 VA & Sumur Bor / Pompa</span>
+                  </div>
+                  <div class="spec-sheet-row">
+                    <span class="name">Status Dokumen</span>
+                    <span class="data">Sertifikat Hak Milik (SHM) & PBG</span>
+                  </div>
+                </div>
+
+                <!-- Dedicated Card: Syarat Khusus & Bank Rekanan Unit Ini -->
+                <div class="unit-financing-guide-panel" id="detailFinancingPanel">
+                  <div class="panel-header-badge">
+                    <h5>🏛️ Syarat & Skema Pembiayaan Unit Ini</h5>
+                    <span class="badge-tag" id="detailFinancingTag">KHUSUS CLUSTER INI</span>
+                  </div>
+                  
+                  <div style="font-size: 0.68rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 700;">BANK MITRA REKANAN RESMI:</div>
+                  <div class="financing-partner-banks" id="detailPartnerBanksRow">
+                    <span class="bank-pill-item">Bank BTN</span>
+                    <span class="bank-pill-item">Bank Mandiri</span>
+                  </div>
+
+                  <div class="financing-details-grid">
+                    <div class="financing-fact-item">
+                      <span class="lbl">Promo Uang Muka (DP)</span>
+                      <span class="val" id="detailPromoDpVal">DP 0% Subsidi</span>
+                    </div>
+                    <div class="financing-fact-item">
+                      <span class="lbl">Estimasi Minimal Gaji</span>
+                      <span class="val" id="detailMinIncomeVal">Rp 7.500.000 / bln</span>
+                    </div>
+                    <div class="financing-fact-item">
+                      <span class="lbl">Diskon Pembayaran Tunai</span>
+                      <span class="val" id="detailCashDiscountVal">Potongan Rp 25 Juta</span>
+                    </div>
+                    <div class="financing-fact-item">
+                      <span class="lbl">Tenor In-House Developer</span>
+                      <span class="val" id="detailInhouseTenorVal">Hingga 18 Bulan</span>
+                    </div>
+                  </div>
+
+                  <div class="unit-special-notes-box" id="detailSpecialNotesBox">
+                    Free Biaya Notaris (AJB) & PPN 100% Ditanggung Pemerintah.
+                  </div>
+                </div>
+
+                <!-- Google Maps Block -->
+                <div class="location-map-panel">
+                  <div class="map-header-row">
+                    <h5>Koordinat Lokasi Kawasan</h5>
+                    <span style="font-size: 0.7rem; color: var(--text-muted);" id="detailLocationText">Rajabasa, Bandar Lampung</span>
+                  </div>
+                  <div class="map-mock-canvas">
+                    <div class="map-pin-marker">TITIK KAVLING</div>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);">Peta Terintegrasi Google Maps</span>
+                  </div>
+                  <button class="btn-action-outline" style="width: 100%; margin-top: 10px; font-size: 0.75rem;" onclick="simulateOpenMaps()">
+                    Buka Rute di Aplikasi Google Maps
+                  </button>
+                </div>
+
+                <div style="font-size: 0.76rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 20px;" id="detailDescription">
+                  Deskripsi perumahan...
+                </div>
+              </div>
+
+              <!-- Detail Action Bar -->
+              <div class="sticky-action-dock">
+                <button class="btn-action-outline" onclick="openChatWithSales()">
+                  Tanya Sales Lapangan
+                </button>
+                <button class="btn-action-primary" id="btnLaunchBooking" onclick="openBookingDialog()">
+                  Booking Unit Ini
+                </button>
+              </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- 3. VIEW: GUIDE & CHECKLIST (CASH VS KPR)       -->
+            <!-- ============================================== -->
+            <section class="view-screen" id="viewGuideChecklist">
+              
+              <!-- State 1: Belum Ada Booking Unit -->
+              <div class="guide-empty-state-card" id="guideEmptyState" style="margin: 20px 18px;">
+                <div class="guide-empty-icon">📑</div>
+                <h3>Belum Ada Unit yang Dipesan</h3>
+                <p>
+                  Panduan resmi & checklist kelengkapan berkas di halaman ini akan otomatis aktif dan terpersonalisasi setelah Anda mengunci (booking) kavling pilihan Anda di katalog.
+                </p>
+                <div class="guide-preview-flow-steps">
+                  <div class="guide-flow-step-item">1. Pilih Kavling</div>
+                  <div class="guide-flow-arrow">→</div>
+                  <div class="guide-flow-step-item">2. Kunci 15 Menit</div>
+                  <div class="guide-flow-arrow">→</div>
+                  <div class="guide-flow-step-item">3. Berkas Terbit</div>
+                </div>
+                <button class="btn-action-primary" style="width: auto; padding: 10px 22px;" onclick="window.app.switchView('viewCatalog', 'Katalog Kavling', false)">
+                  🔎 Jelajahi Katalog Rumah Sekarang
+                </button>
+              </div>
+
+              <!-- State 2: Unit Sudah Dibooking (Active Guide Content) -->
+              <div id="guideActiveContent" style="display: none;">
+                <!-- Active Booking Banner -->
+                <div style="padding: 16px 18px 0;">
+                  <div class="active-booking-guide-card" id="guideActiveBookingBanner">
+                    <div class="active-booking-badge-row">
+                      <span class="booking-ticket-chip" id="guideTicketCode">BKG-20261001-A01</span>
+                      <span style="font-size: 0.65rem; color: #7ee7a6; font-weight: 800; text-transform: uppercase;">● UNIT TERKUNCI</span>
+                    </div>
+                    <div class="active-booking-title" id="guideBookedTitle">Grand Alessandra - BLOK A-01</div>
+                    <div class="active-booking-meta" id="guideBookedMeta">Tipe 45 / 90 (Rp 385.000.000) • Skema: Pengajuan KPR</div>
+                    
+                    <div class="active-booking-actions">
+                      <div class="active-booking-timer-badge">
+                        ⏱️ <span id="guideHoldTimerText">Batas Kunci: 15:00</span>
+                      </div>
+                      <button class="btn-cancel-booking-chip" onclick="cancelCurrentBooking()">
+                        ✕ Batalkan / Ganti Unit
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="padding: 0 18px 0; background: var(--surface-card); border-bottom: 1px solid var(--border-mid);">
+                  <div style="display: flex; gap: 8px;">
+                    <button class="pill-filter is-active" id="btnGuideKpr" onclick="switchGuideSection('KPR')">Syarat KPR Bank</button>
+                    <button class="pill-filter" id="btnGuideCash" onclick="switchGuideSection('CASH')">Syarat Tunai (Cash)</button>
+                  </div>
+                  <p style="font-size: 0.74rem; color: var(--text-muted); margin: 12px 0 14px;">
+                    Panduan mandiri kelengkapan berkas administrasi sebelum bertemu agen pengembang dan analis perbankan.
+                  </p>
+                </div>
+
+                <!-- KPR Content -->
+                <div id="guideSectionKpr" style="padding: 16px 18px 24px;">
+                
+                <!-- Roadmap KPR -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>🏛️ Roadmap 6 Tahap KPR Pemula</h4>
+                    <span class="badge-tag">DARI NOL S/D AKAD</span>
+                  </div>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45;">
+                    Panduan urutan bagi pemula agar proses pengajuan kredit rumah berjalan lancar tanpa penolakan bank:
+                  </p>
+
+                  <div class="timeline-stepper-list">
+                    <div class="timeline-step-item">
+                      <div class="timeline-step-bullet">1</div>
+                      <div class="timeline-step-content">
+                        <h5>Riset & Cek Riwayat SLIK OJK <span class="duration-pill">Hari 1</span></h5>
+                        <p>Hitung kemampuan cicilan (maksimal 30–35% penghasilan bersih bulanan). Pastikan Anda bebas dari tunggakan pinjaman online (pinjol), kartu kredit, atau paylater. Skor riwayat kredit wajib Kol-1 (Lancar).</p>
+                        <div class="step-tips">💡 Tips: Anda dapat memeriksa skor kredit mandiri secara gratis via portal iDebKu OJK resmi sebelum mengajukan.</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item">
+                      <div class="timeline-step-bullet">2</div>
+                      <div class="timeline-step-content">
+                        <h5>Kunci Kavling & Booking Fee In-App <span class="duration-pill">Hari 1-2</span></h5>
+                        <p>Pilih unit rumah di Huniku, amankan kavling dengan kunci mutex (15 menit), lalu setorkan booking fee resmi pengembang agar unit terlindungi dari perebutan calon pembeli lain.</p>
+                        <div class="step-tips">💡 Status kavling seketika berubah menjadi BOOKED di basis data resmi pengembang.</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item">
+                      <div class="timeline-step-bullet">3</div>
+                      <div class="timeline-step-content">
+                        <h5>Pemberkasan Dokumen ke Bank <span class="duration-pill">Hari 3-5</span></h5>
+                        <p>Lengkapi berkas identitas dan finansial (Slip gaji 3 bln, Rekening koran 3 bln, SPT PPh 21, SK Kerja). Agen resmi Huniku akan mendampingi penyerahan berkas ke analis Bank rekanan (BTN / Mandiri / BSI).</p>
+                        <div class="step-tips">💡 Siapkan dalam 2 rangkap (salinan fotokopi dan dokumen asli untuk pencocokan fisik).</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item">
+                      <div class="timeline-step-bullet">4</div>
+                      <div class="timeline-step-content">
+                        <h5>Verifikasi & Appraisal Lapangan <span class="duration-pill">Hari 6-10</span></h5>
+                        <p>Tim penilai independen bank melakukan survei fisik ke kavling untuk menaksir nilai agunan, kualitas konstruksi bangunan, dan kelayakan sertifikat (SHM & PBG).</p>
+                        <div class="step-tips">💡 Pastikan nomor HRD kantor tempat bekerja aktif dan dapat dihubungi saat jam kerja perbankan.</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item">
+                      <div class="timeline-step-bullet">5</div>
+                      <div class="timeline-step-content">
+                        <h5>Penerbitan Surat Persetujuan SP3K <span class="duration-pill">Hari 10-14</span></h5>
+                        <p>Jika lolos uji analisis, bank menerbitkan Surat Penegasan Persetujuan Penyediaan Kredit (SP3K) yang merinci limit plafon kredit, suku bunga fixed & floating, tenor, dan rincian biaya pra-akad.</p>
+                        <div class="step-tips">💡 SP3K memiliki masa berlaku 3 bulan sejak tanggal diterbitkan.</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item">
+                      <div class="timeline-step-bullet">6</div>
+                      <div class="timeline-step-content">
+                        <h5>Akad Kredit Notaris & Serah Terima Rumah <span class="duration-pill">Hari H Akad</span></h5>
+                        <p>Penandatanganan Perjanjian Kredit, Akta Pembebanan Hak Tanggungan (APHT), dan Akta Jual Beli (AJB) di hadapan Notaris/PPAT. Pembeli melunasi sisa DP, menerima berkas tanda bukti kepemilikan, dan serah terima kunci unit fisik (BAST).</p>
+                        <div class="step-tips">💡 Wajib dihadiri oleh suami dan istri (jika berstatus telah menikah).</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Checklist KPR -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>📋 Checklist Dokumen Pemohon KPR</h4>
+                    <span class="badge-tag">KLIK CENTANG</span>
+                  </div>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Centang berkas yang telah Anda siapkan untuk memeriksa kesiapan pengajuan mandiri:
+                  </p>
+
+                  <div class="checklist-row-item is-checked" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Salinan e-KTP Pemohon & Pasangan (Suami/Istri)</span>
+                  </div>
+                  <div class="checklist-row-item" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Kartu Keluarga (KK) & Surat Nikah / Akta Cerai</span>
+                  </div>
+                  <div class="checklist-row-item" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">NPWP Pribadi & Bukti Pelaporan SPT Tahunan PPh 21</span>
+                  </div>
+                  <div class="checklist-row-item" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Slip Gaji Asli 3 Bulan Terakhir (Stempel Basah Perusahaan)</span>
+                  </div>
+                  <div class="checklist-row-item" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Rekening Koran Payroll / Tabungan 3 Bulan Terakhir</span>
+                  </div>
+                  <div class="checklist-row-item" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Surat Keterangan Bekerja Aktif (Karyawan Tetap min. 1-2 tahun)</span>
+                  </div>
+                  <div class="checklist-row-item" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Pengecekan Skor SLIK OJK / BI Checking Bersih (Kol 1)</span>
+                  </div>
+                  <div class="checklist-row-item" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Khusus Wiraswasta: NIB / SIUP, Laporan Usaha 6 Bln & Rekening Usaha</span>
+                  </div>
+                </div>
+
+                <!-- Estimasi Biaya KPR -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>💰 Estimasi Biaya Tambahan KPR (Pra-Akad)</h4>
+                    <span class="badge-tag">DANA EKSTRA 5–7%</span>
+                  </div>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Biaya resmi di luar harga pokok rumah yang wajib disiapkan sebelum jadwal tanda tangan akad kredit:
+                  </p>
+                  <table class="cost-table-simple">
+                    <thead>
+                      <tr>
+                        <th>Komponen Biaya</th>
+                        <th>Estimasi Tarif</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Uang Muka (DP)</strong></td>
+                        <td>0% – 10% (sesuai program promo perumahan)</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Pajak Pembeli (BPHTB)</strong></td>
+                        <td>5% x (Nilai Transaksi – NPOPTKP Daerah)</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Biaya Provisi Bank</strong></td>
+                        <td>1% dari total nilai kredit yang dicairkan</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Administrasi & Appraisal</strong></td>
+                        <td>Rp 500.000 – Rp 1.500.000</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Asuransi Jiwa & Kebakaran</strong></td>
+                        <td>Tergantung usia debitur & jangka waktu tenor</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Biaya Notaris / APHT</strong></td>
+                        <td>± 1% untuk Akta Jual Beli & Hak Tanggungan</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Glosarium KPR -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>📖 Kamus Istilah KPR untuk Orang Awam</h4>
+                    <span class="badge-tag">GLOSARIUM</span>
+                  </div>
+                  <div class="glossary-grid">
+                    <div class="glossary-item">
+                      <div class="glossary-term">SP3K (Surat Penegasan Persetujuan Penyediaan Kredit)</div>
+                      <div class="glossary-meaning">Surat resmi dari bank yang menyatakan permohonan pinjaman rumah Anda disetujui, mencantumkan jumlah cicilan dan bunga.</div>
+                    </div>
+                    <div class="glossary-item">
+                      <div class="glossary-term">SLIK OJK (Eks BI Checking)</div>
+                      <div class="glossary-meaning">Sistem informasi untuk mengecek rekam jejak kelancaran cicilan pinjaman Anda di seluruh lembaga keuangan.</div>
+                    </div>
+                    <div class="glossary-item">
+                      <div class="glossary-term">Appraisal</div>
+                      <div class="glossary-meaning">Proses penilaian harga pasar rumah secara objektif oleh tim analis bank untuk menentukan batas maksimal pinjaman.</div>
+                    </div>
+                    <div class="glossary-item">
+                      <div class="glossary-term">APHT (Akta Pembebanan Hak Tanggungan)</div>
+                      <div class="glossary-meaning">Akta hukum jaminan yang menyatakan sertifikat rumah menjadi agunan resmi perbankan hingga pinjaman lunas.</div>
+                    </div>
+                    <div class="glossary-item">
+                      <div class="glossary-term">Masa Retensi Konstruksi</div>
+                      <div class="glossary-meaning">Masa garansi pemeliharaan gratis selama 100 hari dari developer jika ada kebocoran atap atau retak plamir pasca serah terima.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Warning Callout KPR -->
+                <div class="scheme-mini-warning" style="padding: 10px 12px; font-size: 0.72rem;">
+                  ⚠️ <strong>ATURAN EMAS ANTI GAGAL:</strong> DILARANG keras mengajukan pinjaman online (pinjol), kredit motor/mobil, kartu kredit baru, atau paylater selama proses pengajuan KPR berjalan. Bank akan melakukan verifikasi SLIK ulang sesaat sebelum akad kredit, dan penambahan beban cicilan baru dapat menggagalkan SP3K Anda secara seketika!
+                </div>
+
+              </div>
+
+              <!-- CASH Content -->
+              <div id="guideSectionCash" style="display: none; padding: 16px 18px 24px;">
+
+                <!-- Perbandingan Skema Tunai -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>💵 Pilihan Skema Pembayaran Tunai</h4>
+                    <span class="badge-tag">TUNAI LANGSUNG</span>
+                  </div>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Pelajari perbedaan dua metode pembelian tunai tanpa bunga perbankan:
+                  </p>
+                  <table class="cost-table-simple">
+                    <thead>
+                      <tr>
+                        <th>Skema</th>
+                        <th>Jangka Waktu</th>
+                        <th>Keunggulan</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Tunai Keras (Cash Keras)</strong></td>
+                        <td>Pelunasan 100% dalam tempo 30–60 hari</td>
+                        <td>Mendapatkan potongan diskon harga langsung tertinggi dari pengembang (5% – 15%).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Tunai Bertahap (In-House)</strong></td>
+                        <td>Dicicil 6, 12, 18 hingga 24 bulan langsung ke developer</td>
+                        <td>Tanpa bunga bank, tanpa BI Checking, syarat dokumen identitas sangat sederhana.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Roadmap Tunai -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>📑 Roadmap 5 Tahap Pembelian Tunai</h4>
+                    <span class="badge-tag">DARI BOOKING KE SERTIFIKAT</span>
+                  </div>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45;">
+                    Alur transaksi aman bagi pemula agar terhindar dari sengketa properti:
+                  </p>
+
+                  <div class="timeline-stepper-list">
+                    <div class="timeline-step-item cash-style">
+                      <div class="timeline-step-bullet">1</div>
+                      <div class="timeline-step-content">
+                        <h5>Cek Legalitas Sertifikat & Izin PBG <span class="duration-pill">Hari 1</span></h5>
+                        <p>Pastikan sertifikat Sertifikat Hak Milik (SHM) sudah split/pecah per kavling, izin Persetujuan Bangunan Gedung (PBG) terbit, dan kavling tidak dalam sita agunan bank.</p>
+                        <div class="step-tips">💡 Unit di Huniku dengan label "SHM Siap" telah terverifikasi bebas sengketa di kantor pertanahan BPN.</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item cash-style">
+                      <div class="timeline-step-bullet">2</div>
+                      <div class="timeline-step-content">
+                        <h5>Kunci Kavling & Setor Booking Fee <span class="duration-pill">Hari 1-2</span></h5>
+                        <p>Kunci unit di aplikasi Huniku untuk mengamankan kavling dan bayar tanda jadi resmi agar status berubah menjadi BOOKED.</p>
+                        <div class="step-tips">💡 Anda akan menerima Kode Tiket Booking resmi untuk verifikasi administrasi kantor developer.</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item cash-style">
+                      <div class="timeline-step-bullet">3</div>
+                      <div class="timeline-step-content">
+                        <h5>Penandatanganan Akta PPJB di Notaris <span class="duration-pill">Hari 7-14</span></h5>
+                        <p>Perjanjian Pengikatan Jual Beli (PPJB) dibuat di hadapan Notaris resmi. Memuat klausul spesifikasi teknis bangunan, jadwal termin, sanksi keterlambatan, dan tenggat serah terima kunci.</p>
+                        <div class="step-tips">💡 Jangan tanda tangan PPJB di bawah tangan tanpa legalisasi Notaris.</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item cash-style">
+                      <div class="timeline-step-bullet">4</div>
+                      <div class="timeline-step-content">
+                        <h5>Pembayaran Termin / Pelunasan ke Rekening PT <span class="duration-pill">Sesuai Termin</span></h5>
+                        <p>Menyetor pembayaran termin via transfer bank ke Rekening Resmi Perusahaan (PT Developer). Dilarang menyetor ke rekening perseorangan!</p>
+                        <div class="step-tips">💡 Simpan seluruh bukti slip transfer asli dan minta kwitansi resmi bermeterai Rp 10.000 dengan stempel basah.</div>
+                      </div>
+                    </div>
+
+                    <div class="timeline-step-item cash-style">
+                      <div class="timeline-step-bullet">5</div>
+                      <div class="timeline-step-content">
+                        <h5>Akta AJB, Balik Nama SHM & Serah Terima Rumah <span class="duration-pill">Setelah Lunas</span></h5>
+                        <p>Setelah rumah selesai dibangun dan pembayaran lunas 100%, Pejabat Pembuat Akta Tanah (PPAT) menerbitkan Akta Jual Beli (AJB), pembeli membayar pajak BPHTB, proses balik nama sertifikat ke BPN, dan serah terima kunci fisik (BAST).</p>
+                        <div class="step-tips">💡 Lakukan uji fungsi kran air, kelistrikan, dan kunci pintu bersama mandor sebelum menandatangani BAST.</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Checklist Tunai -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>📋 Checklist Dokumen Pembeli Tunai</h4>
+                    <span class="badge-tag">SYARAT MUDAH</span>
+                  </div>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); margin-bottom: 10px;">
+                    Persyaratan administrasi pembeli tunai jauh lebih ringkas tanpa verifikasi perbankan:
+                  </p>
+
+                  <div class="checklist-row-item is-checked" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Salinan e-KTP Pembeli & Pasangan (Suami/Istri)</span>
+                  </div>
+                  <div class="checklist-row-item is-checked" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Salinan Kartu Keluarga (KK)</span>
+                  </div>
+                  <div class="checklist-row-item is-checked" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">NPWP Pribadi Pembeli (untuk pelaporan pajak perolehan)</span>
+                  </div>
+                  <div class="checklist-row-item" onclick="toggleCheckRow(this)">
+                    <div class="checkbox-square">✓</div>
+                    <span class="text">Bukti Slip Asli Transfer Bank ke Rekening Resmi PT Developer</span>
+                  </div>
+                </div>
+
+                <!-- Estimasi Biaya Tunai -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>💰 Rincian Pajak & Biaya Transaksi Tunai</h4>
+                    <span class="badge-tag">BIAYA RESMI</span>
+                  </div>
+                  <table class="cost-table-simple">
+                    <thead>
+                      <tr>
+                        <th>Komponen Biaya</th>
+                        <th>Penanggung & Estimasi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Pajak Pembeli (BPHTB)</strong></td>
+                        <td>Ditanggung Pembeli (5% x [Harga Transaksi – NPOPTKP Daerah])</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Honorarium Notaris / PPAT</strong></td>
+                        <td>± 0.5% – 1% (Pembuatan akta PPJB, AJB, dan balik nama SHM)</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Cek Bersih Sertifikat di BPN</strong></td>
+                        <td>Rp 50.000 – Rp 150.000 (validasi keaslian warkah sertifikat)</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Pajak Penjual (PPh Final 2.5%)</strong></td>
+                        <td>Standar unit Huniku sudah ditanggung penuh oleh pihak Pengembang</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Glosarium Tunai -->
+                <div class="guide-card-section">
+                  <div class="guide-card-header">
+                    <h4>📖 Kamus Istilah Pembelian Tunai</h4>
+                    <span class="badge-tag">GLOSARIUM</span>
+                  </div>
+                  <div class="glossary-grid">
+                    <div class="glossary-item">
+                      <div class="glossary-term">PPJB (Perjanjian Pengikatan Jual Beli)</div>
+                      <div class="glossary-meaning">Perjanjian pendahuluan sebelum rumah lunas atau selesai dibangun yang mengikat komitmen harga dan jadwal serah terima.</div>
+                    </div>
+                    <div class="glossary-item">
+                      <div class="glossary-term">AJB (Akta Jual Beli)</div>
+                      <div class="glossary-meaning">Akta otentik resmi yang dibuat oleh PPAT sebagai dasar perubahan balik nama sertifikat tanah di BPN setelah pembayaran lunas 100%.</div>
+                    </div>
+                    <div class="glossary-item">
+                      <div class="glossary-term">BPHTB</div>
+                      <div class="glossary-meaning">Bea Perolehan Hak atas Tanah dan Bangunan, pajak daerah wajib yang dibayar pembeli saat menerima kepemilikan properti.</div>
+                    </div>
+                    <div class="glossary-item">
+                      <div class="glossary-term">BAST (Berita Acara Serah Terima)</div>
+                      <div class="glossary-meaning">Surat serah terima fisik bangunan dari pengembang ke pemilik setelah pengecekan kualitas dan kelengkapan fasilitas.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Warning Anti Penipuan -->
+                <div class="scheme-mini-warning" style="padding: 10px 12px; font-size: 0.72rem;">
+                  ⚠️ <strong>PERINGATAN KEAMANAN ANTI-PENIPUAN:</strong> JANGAN PERNAH mentransfer uang muka atau pelunasan ke nomor rekening pribadi sales atau perorangan! Seluruh transaksi WAJIB disetorkan langsung ke Rekening Giro Bank berbadan hukum resmi PT Pengembang, disertai kwitansi basah resmi berstempel dan bermeterai Rp 10.000.
+                </div>
+
+                </div>
+              </div><!-- /guideActiveContent -->
+            </section>
+
+            <!-- ============================================== -->
+            <!-- 4. VIEW: IN-APP CHAT (INTERNAL MESSENGER)      -->
+            <!-- ============================================== -->
+            <section class="view-screen" id="viewInAppChat" style="height: 100%;">
+              <div class="chat-view-container">
+                <!-- Chat Header -->
+                <div class="chat-header-bar">
+                  <div class="chat-interlocutor">
+                    <div class="interlocutor-initial" id="chatAvatarBadge">AR</div>
+                    <div class="interlocutor-meta">
+                      <h4 id="chatPersonName">Sarah Amelia - Agen Resmi</h4>
+                      <p id="chatPersonRole">Kantor Pemasaran Pengembang</p>
+                    </div>
+                  </div>
+                  <button class="nav-back-button" onclick="clearChatHistory()" title="Bersihkan obrolan" style="width: 28px; height: 28px; font-size: 0.7rem;">↺</button>
+                </div>
+
+                <!-- Chat Stream Messages -->
+                <div class="chat-stream-box" id="chatStreamTarget">
+                  <!-- Attached Booking Context Card -->
+                  <div class="chat-attached-context-card" id="chatContextCard" style="display: none;">
+                    <div class="context-card-top">
+                      <span>LAMPIRAN TIKET BOOKING RESMI</span>
+                      <span style="color: var(--status-booked-text);" id="bookingHoldTimer">BATAS HOLD 15 MENIT</span>
+                    </div>
+                    <div class="context-card-unit" id="chatCardClusterText">Grand Alessandra - Blok A-01</div>
+                    <div class="context-card-scheme" id="chatCardDetailText">Kode: BKG-20261001-A01 • Skema KPR Bank</div>
+                  </div>
+
+                  <!-- Messages populated by chat.js -->
+                </div>
+
+                <!-- Quick Replies -->
+                <div class="chat-quick-suggestions">
+                  <div class="quick-suggestion-item" onclick="submitQuickPrompt('Berkas KPR sudah lengkap sesuai checklist aplikasi.')">Berkas KPR Lengkap</div>
+                  <div class="quick-suggestion-item" onclick="submitQuickPrompt('Mohon jadwal survei fisik lokasi kavling besok pagi.')">Jadwal Survei Lokasi</div>
+                  <div class="quick-suggestion-item" onclick="submitQuickPrompt('Apakah sertifikat SHM sudah pecah per kavling?')">Status SHM Pecah?</div>
+                  <div class="quick-suggestion-item" onclick="submitQuickPrompt('Apakah pembayaran uang muka (DP) dapat dicicil?')">Cicilan Uang Muka (DP)</div>
+                </div>
+
+                <!-- Input Field with WA-style Attachment Button -->
+                <div class="chat-input-bar-wrap">
+                  <!-- Attachment Popup Menu -->
+                  <div class="chat-attach-popup-menu" id="chatAttachMenu" style="display: none;">
+                    <button type="button" class="attach-menu-item" onclick="openAttachPicker('DOCUMENT')">
+                      <div class="attach-icon-circle doc">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                      </div>
+                      <span>Dokumen (PDF)</span>
+                    </button>
+
+                    <button type="button" class="attach-menu-item" onclick="openAttachPicker('PHOTO')">
+                      <div class="attach-icon-circle media">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                      </div>
+                      <span>Foto & Galeri</span>
+                    </button>
+
+                    <button type="button" class="attach-menu-item" onclick="openAttachPicker('LOCATION')">
+                      <div class="attach-icon-circle loc">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      </div>
+                      <span>Bagi Lokasi (GPS)</span>
+                    </button>
+
+                    <button type="button" class="attach-menu-item" onclick="openAttachPicker('CAMERA')">
+                      <div class="attach-icon-circle camera">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      </div>
+                      <span>Kamera Lapangan</span>
+                    </button>
+                  </div>
+
+                  <!-- Paperclip Button -->
+                  <button type="button" class="btn-chat-attach" id="btnChatAttach" onclick="toggleChatAttachMenu()" title="Lampirkan Dokumen / Media / Lokasi" aria-label="Lampirkan dokumen, foto, atau lokasi">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                    </svg>
+                  </button>
+
+                  <input type="text" class="chat-text-field" id="chatInputMessage" placeholder="Ketik pesan langsung ke pengembang..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+                  <button type="button" class="btn-chat-send" onclick="sendChatMessage()">Kirim</button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- 5. VIEW: RESIDENT COMPLAINTS & WARRANTY        -->
+            <!-- ============================================== -->
+            <section class="view-screen" id="viewResidentDesk">
+              <!-- Resident Profile Banner -->
+              <div class="resident-profile-banner">
+                <div>
+                  <div style="font-size: 0.68rem; color: var(--text-tertiary); font-weight: 700; text-transform: uppercase;">Penghuni Terverifikasi</div>
+                  <div style="font-size: 0.92rem; font-weight: 800; color: var(--text-main);">Ibu Ratna • Kavling Blok B-05</div>
+                  <div style="font-size: 0.72rem; color: var(--brand-accent); font-weight: 600;">Sentral Garden Residence</div>
+                </div>
+                <span class="badge-available" style="padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700;">🛡️ Garansi Aktif (142 Hari)</span>
+              </div>
+
+              <!-- Summary Metric Cards -->
+              <div class="resident-kpi-summary-grid">
+                <div class="resident-kpi-card">
+                  <div class="num" id="statTotalComplaints">2</div>
+                  <div class="lbl">Total Laporan</div>
+                </div>
+                <div class="resident-kpi-card progress">
+                  <div class="num" id="statProgressComplaints">1</div>
+                  <div class="lbl">Sedang Diproses</div>
+                </div>
+                <div class="resident-kpi-card resolved">
+                  <div class="num" id="statResolvedComplaints">1</div>
+                  <div class="lbl">Selesai (Tuntas)</div>
+                </div>
+              </div>
+
+              <!-- Hero Action Card: Buat Pengaduan Baru -->
+              <div class="resident-action-hero-card">
+                <div class="hero-action-text">
+                  <h4>Ada Kerusakan Fasilitas?</h4>
+                  <p>Lapor cepat ke kantor pengelola. Seluruh biaya gratis di masa retensi garansi developer.</p>
+                </div>
+                <button class="btn-open-complaint" onclick="openComplaintModal()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <span>Lapor Baru</span>
+                </button>
+              </div>
+
+              <!-- Filter Tabs Riwayat Laporan -->
+              <div class="resident-filter-tabs">
+                <button class="resident-filter-pill active" onclick="setComplaintFilter('ALL', this)">Semua Laporan</button>
+                <button class="resident-filter-pill" onclick="setComplaintFilter('IN_PROGRESS', this)">Sedang Diproses</button>
+                <button class="resident-filter-pill" onclick="setComplaintFilter('RESOLVED', this)">Selesai Diperbaiki</button>
+              </div>
+
+              <!-- Riwayat Pemeliharaan & Status Garansi -->
+              <div style="padding: 4px 18px 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+                  <h4 style="font-size: 0.85rem; font-weight: 800; color: var(--text-main);">Daftar Pengaduan Saya</h4>
+                  <span style="font-size: 0.68rem; color: var(--text-tertiary); font-family: var(--font-mono);">Maintenance Log</span>
+                </div>
+
+                <div id="residentTicketsFeed">
+                  <!-- Populated by resident.js -->
+                </div>
+              </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- 6. VIEW: ADMIN DEVELOPER MASTER DESK           -->
+            <!-- ============================================== -->
+            <!-- 6. VIEW: WEB ADMIN ENTERPRISE MASTER DESK     -->
+            <!-- ============================================== -->
+            <section class="view-screen" id="viewAdminMaster">
+              <div class="admin-workspace-wrap">
+                <!-- Left Sidebar Navigation -->
+                <aside class="admin-sidebar">
+                  <div class="admin-sidebar-header">
+                    <div class="admin-avatar-box">H</div>
+                    <div>
+                      <div style="font-size: 0.82rem; font-weight: 800; color: #f8fafc;">Huniku Admin</div>
+                      <div style="font-size: 0.65rem; color: #10b981; font-weight: 600;">Developer & Estate Suite</div>
+                    </div>
+                  </div>
+
+                  <div class="admin-nav-list">
+                    <button type="button" class="admin-nav-btn active" id="btnAdminNavInventory" onclick="switchAdminTab('inventory')">
+                      <div class="nav-left">
+                        <span>🏠</span>
+                        <span>Inventaris Unit</span>
+                      </div>
+                      <span class="admin-nav-badge" id="badgeNavUnits">0</span>
+                    </button>
+
+                    <button type="button" class="admin-nav-btn" id="btnAdminNavSitePlan" onclick="switchAdminTab('siteplan')">
+                      <div class="nav-left">
+                        <span>🗺️</span>
+                        <span>Site Plan Peta</span>
+                      </div>
+                      <span class="admin-nav-badge" style="background: rgba(16,185,129,0.2); color:#34d399;">PETA</span>
+                    </button>
+
+                    <button type="button" class="admin-nav-btn" id="btnAdminNavBooking" onclick="switchAdminTab('booking')">
+                      <div class="nav-left">
+                        <span>📑</span>
+                        <span>Verifikasi Booking</span>
+                      </div>
+                      <span class="admin-nav-badge" id="badgeNavBookings">0</span>
+                    </button>
+
+                    <button type="button" class="admin-nav-btn" id="btnAdminNavTickets" onclick="switchAdminTab('tickets')">
+                      <div class="nav-left">
+                        <span>🛠️</span>
+                        <span>Komplain & Teknisi</span>
+                      </div>
+                      <span class="admin-nav-badge" id="badgeNavTickets">0</span>
+                    </button>
+
+                    <button type="button" class="admin-nav-btn" id="btnAdminNavLogs" onclick="switchAdminTab('logs')">
+                      <div class="nav-left">
+                        <span>📜</span>
+                        <span>Log Riwayat Audit</span>
+                      </div>
+                      <span class="admin-nav-badge">LIVE</span>
+                    </button>
+                  </div>
+                </aside>
+
+                <!-- Right Main Content Area -->
+                <main class="admin-main-stage">
+                  <!-- Top Banner -->
+                  <div class="admin-top-banner">
+                    <div>
+                      <h3 id="adminPageHeaderTitle">Manajemen Inventaris Kavling</h3>
+                      <p id="adminPageHeaderSubtitle">Kontrol ketersediaan unit real-time, spesifikasi, dan skema pembiayaan perumahan.</p>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                      <button type="button" class="btn-admin-action primary" onclick="openAddUnitModal()">
+                        <span>+ Tambah Unit Kavling</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- KPI Stats Grid -->
+                  <div class="admin-stats-grid">
+                    <div class="stat-metric-card">
+                      <span class="t">Unit Tersedia</span>
+                      <span class="v" id="adminStatAvail" style="color: #10b981;">0 Unit</span>
+                    </div>
+                    <div class="stat-metric-card">
+                      <span class="t">Dalam Pemesanan (Hold)</span>
+                      <span class="v" id="adminStatBooked" style="color: #f59e0b;">0 Unit</span>
+                    </div>
+                    <div class="stat-metric-card">
+                      <span class="t">Disita Bank Rekanan</span>
+                      <span class="v" id="adminStatSita" style="color: #ef4444;">0 Unit</span>
+                    </div>
+                    <div class="stat-metric-card">
+                      <span class="t">Tiket Komplain Aktif</span>
+                      <span class="v" id="adminStatTickets" style="color: #0284c7;">0 Tiket</span>
+                    </div>
+                  </div>
+
+                  <!-- TAB PANE 1: INVENTARIS UNIT -->
+                  <div class="admin-tab-pane active" id="paneAdminInventory">
+                    <div class="admin-table-container">
+                      <div class="admin-table-title">
+                        <span>Daftar Seluruh Kavling Perumahan</span>
+                        <div style="display: flex; gap: 8px;">
+                          <input type="text" id="adminSearchUnitInput" placeholder="Cari blok kavling / cluster..." onkeyup="filterAdminUnitsTable()" style="padding: 5px 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.72rem; outline: none;">
+                        </div>
+                      </div>
+                      <div style="overflow-x: auto;">
+                        <table class="admin-data-table">
+                          <thead>
+                            <tr>
+                              <th>Kavling</th>
+                              <th>Cluster & Wilayah</th>
+                              <th>Tipe / Dimensi</th>
+                              <th>Harga Jual</th>
+                              <th>Status Ketersediaan</th>
+                              <th>Aksi</th>
+                            </tr>
+                          </thead>
+                          <tbody id="adminUnitRowsTarget">
+                            <!-- Populated by admin.js -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB PANE 2: SITE PLAN INTERAKTIF (PETA KAWASAN) -->
+                  <div class="admin-tab-pane" id="paneAdminSitePlan">
+                    <div class="site-plan-container">
+                      <div class="site-plan-legend">
+                        <div class="legend-item"><div class="legend-dot available"></div><span>Tersedia (AVAILABLE)</span></div>
+                        <div class="legend-item"><div class="legend-dot booked"></div><span>Dipesan (BOOKED)</span></div>
+                        <div class="legend-item"><div class="legend-dot sold"></div><span>Terjual (SOLD)</span></div>
+                        <div class="legend-item"><div class="legend-dot sita"></div><span>Sita Bank (DI_SITA_BANK)</span></div>
+                      </div>
+
+                      <div class="site-plan-map-surface">
+                        <div style="text-align: center; margin-bottom: 12px; font-size: 0.8rem; font-weight: 800; color: #334155;">
+                          SITE PLAN GRAND ALESSANDRA RESIDENCE (SUKARAME)
+                        </div>
+
+                        <!-- Blok Utara -->
+                        <div class="site-lots-row" id="sitePlanNorthRow">
+                          <!-- Lot Cards injected by admin.js -->
+                        </div>
+
+                        <div class="site-road-strip">
+                          ════ JALAN UTAMA BOULEVARD ROW 8 METER (HOTMIX) ════
+                        </div>
+
+                        <!-- Blok Selatan -->
+                        <div class="site-lots-row" id="sitePlanSouthRow">
+                          <!-- Lot Cards injected by admin.js -->
+                        </div>
+                      </div>
+                      <div style="font-size: 0.68rem; color: #64748b; margin-top: 10px; text-align: center;">
+                        💡 <em>Tip Admin: Klik langsung pada salah satu kotak kavling di atas untuk mengubah statusnya secara instan.</em>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB PANE 3: VERIFIKASI BOOKING & KPR -->
+                  <div class="admin-tab-pane" id="paneAdminBooking">
+                    <div class="admin-table-container">
+                      <div class="admin-table-title">
+                        <span>Antrean Verifikasi Booking Calon Pembeli</span>
+                        <span style="font-size: 0.7rem; color: #64748b;">Batas Hold 15 Menit Anti Double-Booking</span>
+                      </div>
+                      <div style="padding: 16px;">
+                        <div class="booking-queue-grid" id="adminBookingQueueTarget">
+                          <!-- Populated by admin.js -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB PANE 4: TIKET KOMPLAIN & DISPOSISI TEKNISI -->
+                  <div class="admin-tab-pane" id="paneAdminTickets">
+                    <div class="admin-table-container">
+                      <div class="admin-table-title">
+                        <span>Disposisi & Koordinasi Perbaikan Kerusakan Warga</span>
+                        <span style="font-size: 0.7rem; color: #10b981; font-weight: 700;">🛡️ Seluruh Biaya Ditanggung Retensi Garansi</span>
+                      </div>
+                      <div style="overflow-x: auto;">
+                        <table class="admin-data-table">
+                          <thead>
+                            <tr>
+                              <th>No Tiket</th>
+                              <th>Penghuni / Kavling</th>
+                              <th>Kendala & Preferensi Waktu</th>
+                              <th>Penugasan Teknisi</th>
+                              <th>Status</th>
+                              <th>Aksi Komunikasi</th>
+                            </tr>
+                          </thead>
+                          <tbody id="adminTicketRowsTarget">
+                            <!-- Populated by admin.js -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TAB PANE 5: LOG RIWAYAT AUDIT -->
+                  <div class="admin-tab-pane" id="paneAdminLogs">
+                    <div class="admin-table-container">
+                      <div class="admin-table-title">
+                        <span>Rekam Jejak Aktivitas & Audit Sistem Real-Time</span>
+                        <button type="button" class="btn-admin-action" onclick="renderAdminDesk()">↺ Refresh Log</button>
+                      </div>
+                      <div style="padding: 16px;">
+                        <div class="audit-timeline-list" id="adminAuditLogTarget">
+                          <!-- Populated by admin.js -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </main>
+              </div>
+            </section>
+
+          </div>
+
+          <!-- APP BOTTOM NAVIGATION BAR -->
+          <nav class="app-bottom-nav" id="mainAppDock">
+            <button class="nav-tab-action active" id="tabCatalog" onclick="window.app.switchView('viewCatalog', 'Katalog Kavling', false)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>Katalog</span>
+            </button>
+            <button class="nav-tab-action" id="tabGuide" onclick="window.app.switchView('viewGuideChecklist', 'Panduan Berkas', true)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <span>Syarat</span>
+            </button>
+            <button class="nav-tab-action" id="tabChat" onclick="openChatMessenger()">
+              <div class="chat-unread-dot" id="chatUnreadDot"></div>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>Chat Agen</span>
+            </button>
+            <button class="nav-tab-action" id="tabResident" onclick="window.app.switchView('viewResidentDesk', 'Layanan Warga', false)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>Warga</span>
+            </button>
+          </nav>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERVIEW COMPANION PANEL (SIDEBAR) -->
+    <aside class="interview-companion-deck" id="companionDeck">
+      <div class="companion-header">
+        <div>
+          <h3>Panduan Pewawancara Lapangan</h3>
+          <div style="font-size: 0.68rem; color: #8b99a7; margin-top: 1px;">Kuesioner Terstandarisasi Riset PjBL Huniku</div>
+        </div>
+        <span class="companion-badge">Live Sync</span>
+      </div>
+
+      <div class="companion-scroll-body">
+        <!-- Live Scenario Guide Card -->
+        <div class="guide-step-card">
+          <div class="guide-step-title">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <span id="guideStepTitle">Skenario Aktif</span>
+          </div>
+          <div class="guide-step-desc" id="guideStepDesc">
+            Deskripsi panduan observasi akan tersinkronisasi otomatis saat Anda berpindah layar di simulator.
+          </div>
+          <div style="font-size: 0.68rem; font-weight: 700; color: #7ee7a6; text-transform: uppercase; margin-bottom: 6px;">Pertanyaan Kunci Validasi:</div>
+          <ul class="eval-questions-list" id="evalQuestionsList">
+            <!-- Injected by companion.js -->
+          </ul>
+        </div>
+
+        <!-- LocalStorage Auto-Saved Notes -->
+        <div class="interviewer-notes-box">
+          <div class="notes-header">
+            <span>Catatan Respon Responden</span>
+            <span class="notes-auto-save-tag" id="notesSavedStatus">Tersimpan Otomatis</span>
+          </div>
+          <textarea class="notes-textarea-control" id="interviewerNotesArea" placeholder="Ketik kutipan jawaban responden, hambatan yang mereka alami, atau masukan alur perumahan di sini..."></textarea>
+          
+          <div class="notes-action-buttons">
+            <button class="btn-note-action" onclick="copyInterviewNotes()">Salin Teks</button>
+            <button class="btn-note-action" onclick="exportInterviewNotes()">Export ke .TXT</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- MODAL: ATOMIC MUTEX BOOKING DIALOG -->
+  <div class="sheet-nordic-overlay" id="bookingModalOverlay" onclick="if(event.target === this) closeBookingDialog()" style="display: none; position: fixed; inset: 0; background: rgba(11, 15, 20, 0.75); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; padding: 16px 0;">
+    <div style="background: var(--surface-card); width: 92%; max-width: 440px; max-height: 90vh; overflow-y: auto; border-radius: var(--radius-md); padding: 22px; border: 1px solid var(--border-mid); box-shadow: var(--shadow-float); position: relative;">
+      
+      <!-- Close Button -->
+      <button onclick="closeBookingDialog()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+
+      <!-- Step 1: Input Form -->
+      <div id="modalFormBlock">
+        <span class="status-badge-chip badge-available" id="modalUnitBadge" style="margin-bottom: 8px;">BLOK A-01</span>
+        <h3 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;" id="modalUnitTitle">Tipe 45 / 90</h3>
+        <p style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 14px;">
+          Penguncian unit bersifat sementara (15 Menit) untuk mencegah benturan pemesanan ganda.
+        </p>
+
+        <div class="form-field-unit">
+          <label>Pilih Skema Pembiayaan:</label>
+          <div class="scheme-option-grid">
+            <div class="scheme-option-card active" id="schemeOptionKpr" onclick="selectScheme('KPR')">
+              <div class="scheme-badge-check">✓</div>
+              <div class="scheme-title">Pengajuan KPR</div>
+              <div class="scheme-subtitle">Bank BTN / Mandiri</div>
+            </div>
+            <div class="scheme-option-card" id="schemeOptionCash" onclick="selectScheme('CASH')">
+              <div class="scheme-badge-check">✓</div>
+              <div class="scheme-title">Pembayaran Tunai</div>
+              <div class="scheme-subtitle">Bertahap / Keras</div>
+            </div>
+          </div>
+
+          <!-- Detail Edukasi Awam KPR (Muncul saat KPR aktif) -->
+          <div class="scheme-modal-detail-box kpr" id="schemeDetailBoxKpr">
+            <div class="scheme-modal-detail-title">
+              <span>🏛️ Panduan Langkah KPR untuk Pemula:</span>
+            </div>
+            <p class="scheme-modal-detail-desc">
+              Skema angsuran bank tenor 10–25 tahun. DP mulai 0%–10% dengan syarat kelayakan kredit dan slip gaji resmi.
+            </p>
+            <ul class="scheme-steps-mini">
+              <li>
+                <span class="step-num">1</span>
+                <span><strong>Kunci Unit & Cek SLIK OJK:</strong> Amankan kavling, riwayat kredit dicek (harus bersih bebas macet).</span>
+              </li>
+              <li>
+                <span class="step-num">2</span>
+                <span><strong>Pemberkasan (3-5 Hari):</strong> KTP, KK, NPWP, Slip Gaji 3 bln, Rekening Koran 3 bln, & SK Kerja.</span>
+              </li>
+              <li>
+                <span class="step-num">3</span>
+                <span><strong>Appraisal & SP3K (Hari 7-14):</strong> Taksiran fisik rumah dan terbit surat persetujuan kredit resmi dari bank.</span>
+              </li>
+              <li>
+                <span class="step-num">4</span>
+                <span><strong>Akad Kredit di Notaris:</strong> Tanda tangan berkas resmi, pelunasan DP, dan serah terima kunci (BAST).</span>
+              </li>
+            </ul>
+            <div class="scheme-mini-warning">
+              ⚠️ <strong>Peringatan Pemula:</strong> Siapkan dana 5–7% untuk biaya KPR (Provisi, Asuransi Jiwa/Kebakaran, BPHTB, & Notaris). Dilarang ambil pinjol/kredit baru selama pengajuan!
+            </div>
+            <a class="scheme-link-full-guide" onclick="goToGuideScreen('KPR')">
+              📖 Buka Checklist & Syarat KPR Lengkap di Tab Syarat →
+            </a>
+          </div>
+
+          <!-- Detail Edukasi Awam Tunai (Muncul saat CASH aktif) -->
+          <div class="scheme-modal-detail-box cash" id="schemeDetailBoxCash" style="display: none;">
+            <div class="scheme-modal-detail-title">
+              <span>💵 Panduan Langkah Tunai untuk Pemula:</span>
+            </div>
+            <p class="scheme-modal-detail-desc">
+              Bebas bunga bank, tanpa syarat slip gaji, dan tanpa BI Checking. Cocok bagi yang memiliki dana likuid siap pakai.
+            </p>
+            <ul class="scheme-steps-mini">
+              <li>
+                <span class="step-num">1</span>
+                <span><strong>Pilih Cash Keras vs Bertahap:</strong> Tunai keras lunas 1 bulan (diskon s/d 10%) atau tunai bertahap 6–24 bulan langsung ke developer.</span>
+              </li>
+              <li>
+                <span class="step-num">2</span>
+                <span><strong>Tanda Tangan PPJB di Notaris:</strong> Perjanjian Pengikatan Jual Beli resmi mengikat tenggat pembangunan dan hak kavling.</span>
+              </li>
+              <li>
+                <span class="step-num">3</span>
+                <span><strong>Pembayaran ke Rekening PT:</strong> Transfer WAJIB ke rekening resmi perusahaan pengembang (Bukan rekening pribadi sales!).</span>
+              </li>
+              <li>
+                <span class="step-num">4</span>
+                <span><strong>AJB & Balik Nama SHM:</strong> Akta Jual Beli terbit setelah lunas 100% dan kunci unit diserahterimakan.</span>
+              </li>
+            </ul>
+            <div class="scheme-mini-warning">
+              ⚠️ <strong>Peringatan Pemula:</strong> Siapkan pajak BPHTB 5% dan biaya jasa akta Notaris/PPAT. Selalu minta bukti kwitansi asli bermeterai developer.
+            </div>
+            <a class="scheme-link-full-guide" onclick="goToGuideScreen('CASH')">
+              📖 Buka Checklist & Syarat Tunai Lengkap di Tab Syarat →
+            </a>
+          </div>
+        </div>
+
+        <div class="form-field-unit">
+          <label>Nama Lengkap Pemohon (Sesuai e-KTP):</label>
+          <input type="text" class="field-input-control" id="buyerNameField" placeholder="Contoh: Budi Santoso">
+        </div>
+
+        <div class="form-field-unit">
+          <label>Nomor WhatsApp Aktif:</label>
+          <input type="text" class="field-input-control" id="buyerPhoneField" placeholder="Contoh: 081234567890">
+        </div>
+
+        <button class="btn-action-primary" style="width: 100%; margin-top: 6px;" onclick="executeAtomicLock()">
+          Kunci Kavling Sekarang (15 Menit)
+        </button>
+      </div>
+
+      <!-- Step 2: Concurrency Mutex Locking Progress -->
+      <div id="modalLockingProgress" style="display: none; text-align: center; padding: 24px 10px;">
+        <div style="width: 44px; height: 44px; border: 4px solid var(--border-mid); border-top-color: var(--brand-primary); border-radius: 50%; margin: 0 auto 14px; animation: spin 0.8s linear infinite;"></div>
+        <h4 style="font-size: 0.95rem; font-weight: 800; color: var(--text-main);">Memproses Kunci Mutex Atomik...</h4>
+        <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 6px;">
+          Mengamankan baris basis data (row lock) untuk memastikan unit tidak diserobot pengguna lain.
+        </p>
+      </div>
+
+      <!-- Step 3: Success Pass -->
+      <div id="modalSuccessBlock" style="display: none; text-align: center; padding: 10px 0;">
+        <div style="width: 48px; height: 48px; background: var(--status-avail-bg); color: var(--status-avail-text); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; font-weight: 800; margin: 0 auto 12px; border: 2px solid var(--status-avail-border);">✓</div>
+        <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-main);">Kavling Berhasil Dikunci!</h4>
+        <p style="font-size: 0.74rem; color: var(--text-muted); margin-top: 4px;">
+          Unit berstatus <strong style="color: var(--brand-primary);">BOOKED</strong> selama 15 menit. Silakan lanjutkan koordinasi dokumen fisik melalui In-App Chat.
+        </p>
+
+        <div style="background: var(--surface-subtle); border: 1px dashed var(--border-mid); border-radius: var(--radius-xs); padding: 12px; margin: 16px 0; text-align: left;">
+          <div style="font-size: 0.65rem; color: var(--text-tertiary); font-weight: 700; text-transform: uppercase;">Kode Tiket Booking</div>
+          <div style="font-size: 1rem; font-weight: 800; font-family: var(--font-mono); color: var(--brand-primary);" id="passCodeDisplay">BKG-20261001-A01</div>
+          <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;" id="passDetailDisplay">Grand Alessandra - Blok A-01 • KPR</div>
+        </div>
+
+        <button class="btn-action-primary" style="width: 100%;" onclick="forwardToAgentChat()">
+          Lanjut Chat Agen Resmi (Bawa Tiket)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: SWITCH UNIT CONFIRMATION (KEBIJAKAN 1 AKUN 1 KAVLING AKTIF) -->
+  <div class="sheet-nordic-overlay" id="switchUnitModalOverlay" onclick="if(event.target === this) closeSwitchUnitDialog()" style="display: none; position: fixed; inset: 0; background: rgba(11, 15, 20, 0.75); backdrop-filter: blur(8px); z-index: 2100; align-items: center; justify-content: center; padding: 16px 0;">
+    <div class="switch-modal-card">
+      <!-- Close Button -->
+      <button onclick="closeSwitchUnitDialog()" class="modal-close-cross-btn">&times;</button>
+
+      <!-- Warning Icon & Policy Chip -->
+      <div class="switch-modal-header">
+        <div class="switch-warning-badge">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <span class="switch-policy-tag">KEBIJAKAN 1 AKUN 1 KAVLING</span>
+          <h3 class="switch-modal-title">Peringatan Kuota Pemesanan</h3>
+        </div>
+      </div>
+
+      <p class="switch-modal-lead">
+        Saat ini akun Anda sedang mengunci unit lain. Sistem menerapkan batas <strong>1 unit aktif</strong> demi mencegah monopoli kavling bagi calon pembeli lain.
+      </p>
+
+      <!-- Unit Comparison Cards -->
+      <div class="switch-compare-box">
+        <!-- Old Unit -->
+        <div class="compare-unit-row old">
+          <div class="compare-row-header">
+            <span class="compare-status-badge old">🔒 UNIT TERKUNCI SAAT INI</span>
+            <span class="compare-badge-action-note">Akan Dilepas</span>
+          </div>
+          <div class="compare-unit-main" id="switchOldUnitText">BLOK A-01 • Grand Alessandra Residence</div>
+          <div class="compare-unit-meta" id="switchOldUnitMeta">Sedang dalam masa hold 15 menit</div>
+        </div>
+
+        <!-- Arrow Divider -->
+        <div class="compare-arrow-divider">
+          <div class="divider-line"></div>
+          <div class="divider-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            <span>Beralih ke unit baru</span>
+          </div>
+          <div class="divider-line"></div>
+        </div>
+
+        <!-- New Unit -->
+        <div class="compare-unit-row new">
+          <div class="compare-row-header">
+            <span class="compare-status-badge new">✨ UNIT BARU DIPILIH</span>
+            <span class="compare-badge-action-note text-green">Akan Dipesan</span>
+          </div>
+          <div class="compare-unit-main" id="switchNewUnitText">BLOK B-02 • Sentral Garden Residence</div>
+          <div class="compare-unit-meta" id="switchNewUnitMeta">Tipe 36/72 • Rp 385.000.000</div>
+        </div>
+      </div>
+
+      <!-- Policy Info Notice -->
+      <div class="switch-policy-notice">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div>
+          Jika Anda beralih, kunci pada unit lama otomatis dibatalkan dan langsung tersedia di katalog umum.
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="switch-actions-group">
+        <button class="btn-action-primary btn-switch-confirm" onclick="confirmSwitchUnit()">
+          Ya, Beralih ke Unit Ini →
+        </button>
+        <button class="btn-switch-secondary" onclick="closeSwitchUnitDialog()">
+          Batal (Pertahankan Unit Lama)
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: CANCEL ACTIVE BOOKING CONFIRMATION -->
+  <div class="sheet-nordic-overlay" id="cancelUnitModalOverlay" onclick="if(event.target === this) closeCancelUnitDialog()" style="display: none; position: fixed; inset: 0; background: rgba(11, 15, 20, 0.75); backdrop-filter: blur(8px); z-index: 2100; align-items: center; justify-content: center; padding: 16px 0;">
+    <div class="switch-modal-card">
+      <button onclick="closeCancelUnitDialog()" class="modal-close-cross-btn">&times;</button>
+
+      <div class="switch-modal-header">
+        <div class="switch-warning-badge danger">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <div>
+          <span class="switch-policy-tag danger">BATALKAN PENGUNCIAN</span>
+          <h3 class="switch-modal-title">Lepas Kunci Kavling?</h3>
+        </div>
+      </div>
+
+      <p class="switch-modal-lead">
+        Apakah Anda yakin ingin membatalkan penguncian unit <strong id="cancelModalUnitTitle">BLOK A-01</strong>?
+      </p>
+
+      <div class="switch-policy-notice" style="background: #fff5f5; border-color: #ffc9c9; color: #b91c1c; margin-bottom: 18px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink: 0; margin-top: 1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>
+          Tiket booking akan kedaluwarsa seketika dan kavling ini dapat langsung diambil atau dipesan oleh calon pembeli lain.
+        </div>
+      </div>
+
+      <div class="switch-actions-group">
+        <button class="btn-switch-danger" onclick="confirmCancelActiveBooking()">
+          Ya, Batalkan Penguncian Unit
+        </button>
+        <button class="btn-switch-secondary" onclick="closeCancelUnitDialog()">
+          Kembali (Tetap Kunci Unit Ini)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FORMULIR PELAPORAN KERUSAKAN WARGA -->
+  <div class="sheet-nordic-overlay" id="complaintModalOverlay" onclick="if(event.target === this) closeComplaintModal()" style="display: none; position: fixed; inset: 0; background: rgba(11, 15, 20, 0.75); backdrop-filter: blur(8px); z-index: 2200; align-items: center; justify-content: center; padding: 16px 0;">
+    <div class="complaint-modal-card">
+      <button onclick="closeComplaintModal()" class="modal-close-cross-btn">&times;</button>
+
+      <div class="switch-modal-header">
+        <div class="switch-warning-badge" style="background: #e6fcf5; border-color: #96f2d7; color: #0ca678;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+        </div>
+        <div>
+          <span class="switch-policy-tag" style="color: #0ca678;">LAYANAN PURNAJUAL WARGA</span>
+          <h3 class="switch-modal-title">Lapor Kendala Kerusakan</h3>
+        </div>
+      </div>
+
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: var(--radius-xs); padding: 8px 12px; margin-bottom: 14px; font-size: 0.7rem; color: #166534; display: flex; align-items: center; gap: 8px;">
+        <span>🛡️</span>
+        <span><strong>Unit BLOK B-05:</strong> Masa retensi garansi aktif. Perbaikan 100% Bebas Biaya.</span>
+      </div>
+
+      <!-- Kategori Kerusakan -->
+      <div class="form-field-unit">
+        <label>Pilih Kategori Kerusakan Fisik:</label>
+        <div class="category-chips-matrix">
+          <button class="chip-selector-btn active" onclick="pickComplaintCategory('AIR', this)">🚰 Fasilitas Air Bersih</button>
+          <button class="chip-selector-btn" onclick="pickComplaintCategory('BANGUNAN', this)">🏠 Struktur Bangunan / Atap</button>
+          <button class="chip-selector-btn" onclick="pickComplaintCategory('LINGKUNGAN', this)">💡 Fasum / Lampu Jalan</button>
+          <button class="chip-selector-btn" onclick="pickComplaintCategory('LAINNYA', this)">⚙️ Kendala Lainnya</button>
+        </div>
+      </div>
+
+      <!-- Lampiran Foto -->
+      <div class="form-field-unit">
+        <label>Lampiran Bukti Foto Kerusakan:</label>
+        <div style="border: 1.5px dashed var(--border-mid); background: #f8fafc; border-radius: var(--radius-xs); padding: 12px; text-align: center; cursor: pointer; transition: all 0.15s;" onclick="togglePhotoAttachment()">
+          <div style="font-size: 0.74rem; font-weight: 700; color: var(--brand-accent);">📷 Klik untuk Lampirkan Foto Lapangan</div>
+          <div style="font-size: 0.66rem; color: var(--text-muted); margin-top: 2px;">Foto memudahkan teknisi membawa material yang tepat sebelum inspeksi</div>
+          <div id="complaintPhotoPreviewThumb" style="display: none; margin-top: 10px; justify-content: center; align-items: center; gap: 8px;">
+            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=140&q=80" style="width: 65px; height: 65px; border-radius: 6px; object-fit: cover; border: 1.5px solid var(--brand-accent);" alt="Foto Kerusakan">
+            <span style="font-size: 0.65rem; color: #16a34a; font-weight: 700;">✓ Foto Terlampir (Klik lagi untuk batal)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deskripsi Masalah -->
+      <div class="form-field-unit">
+        <label>Rincian Deskripsi Masalah:</label>
+        <textarea class="field-input-control" id="complaintNotesArea" rows="3" placeholder="Contoh: Pipa kran wastafel dapur rembes air sejak kemarin sore..."></textarea>
+      </div>
+
+      <!-- Pilihan Hari / Tanggal Kunjungan -->
+      <div class="form-field-unit">
+        <label>Pilihan Hari Kunjungan Teknisi:</label>
+        <div class="visit-pref-chips">
+          <div class="visit-chip active" id="chipDayWorkday" onclick="pickVisitDay('Hari Kerja (Senin–Jumat)', this)">
+            📅 Hari Kerja
+          </div>
+          <div class="visit-chip" id="chipDayWeekend" onclick="pickVisitDay('Akhir Pekan (Sabtu–Minggu)', this)">
+            🏖️ Akhir Pekan
+          </div>
+          <div class="visit-chip" id="chipDayCustom" onclick="pickVisitDay('Pilih Tanggal', this)">
+            🗓️ Tanggal Khusus
+          </div>
+        </div>
+        <div id="customVisitDateBox" style="display: none; margin-top: 8px;">
+          <input type="date" class="field-input-control" id="customVisitDateField">
+          <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 3px;">Pilih tanggal spesifik kedatangan teknisi yang Anda kehendaki.</div>
+        </div>
+      </div>
+
+      <!-- Pilihan Jam Kedatangan Teknisi -->
+      <div class="form-field-unit">
+        <label>Pilihan Jam Kedatangan Teknisi:</label>
+        <div class="visit-pref-chips">
+          <div class="visit-chip active" id="chipVisitMorning" onclick="pickVisitSlot('Pagi (08:30 - 11:30)', this)">
+            🌅 Pagi (08:30-11:30)
+          </div>
+          <div class="visit-chip" id="chipVisitAfternoon" onclick="pickVisitSlot('Siang (13:30 - 16:30)', this)">
+            ☀️ Siang (13:30-16:30)
+          </div>
+          <div class="visit-chip" id="chipVisitCustom" onclick="pickVisitSlot('Kustom', this)">
+            ⏱️ Jam Kustom
+          </div>
+        </div>
+        <div id="customVisitTimeBox" style="display: none; margin-top: 8px;">
+          <input type="text" class="field-input-control" id="customVisitTimeField" placeholder="Contoh: 17:00 WIB (Sepulang kerja kantor)">
+          <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 3px;">Tentukan jam fleksibel agar teknisi datang saat Anda sudah di rumah.</div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="switch-actions-group" style="margin-top: 16px;">
+        <button type="button" class="btn-action-primary" style="width: 100%;" onclick="submitComplaintForm()">
+          Kirimkan Laporan Pengaduan
+        </button>
+        <button type="button" class="btn-switch-secondary" onclick="closeComplaintModal()">
+          Batal
+        </button>
+      </div>
+
+      <!-- Quick Direct Chat Option -->
+      <div style="margin-top: 14px; text-align: center; border-top: 1px dashed var(--border-mid); padding-top: 12px;">
+        <div style="font-size: 0.68rem; color: var(--text-muted); margin-bottom: 6px;">Butuh penanganan darurat atau konsultasi teknis langsung?</div>
+        <button type="button" class="btn-ticket-chat" style="width: 100%; justify-content: center;" onclick="closeComplaintModal(); openChatWithEstateAdmin('TKT-KONSULTASI');">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span>Chat Langsung Admin Pengelola (Respon Cepat)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ATTACHMENT PICKER DIALOG (WHATSAPP-STYLE MEDIA/DOCUMENT/LOCATION) -->
+  <div class="sheet-nordic-overlay" id="chatAttachmentModalOverlay" onclick="if(event.target === this) closeAttachPicker()" style="display: none; position: fixed; inset: 0; background: rgba(11, 15, 20, 0.75); backdrop-filter: blur(8px); z-index: 2250; align-items: center; justify-content: center; padding: 16px 0;">
+    <div class="complaint-modal-card">
+      <button onclick="closeAttachPicker()" class="modal-close-cross-btn">&times;</button>
+
+      <div class="switch-modal-header">
+        <div class="switch-warning-badge" id="attachModalBadge" style="background: #f3e8ff; border-color: #d8b4fe; color: #7e22ce;">
+          📄
+        </div>
+        <div>
+          <span class="switch-policy-tag" id="attachModalCategoryTag" style="color: #7e22ce;">LAMPIRAN PESAN</span>
+          <h3 class="switch-modal-title" id="attachModalTitle">Pilih Dokumen Berkas</h3>
+        </div>
+      </div>
+
+      <p class="switch-modal-lead" id="attachModalDesc">
+        Pilih dokumen kelengkapan administrasi untuk dikirimkan langsung ke staf pemasaran.
+      </p>
+
+      <!-- Content Container injected by chat.js -->
+      <div id="attachModalListContainer">
+        <!-- Preset cards or picker -->
+      </div>
+
+      <div style="margin-top: 14px;">
+        <button class="btn-switch-secondary" onclick="closeAttachPicker()">
+          Batal
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+
+  <!-- MODAL: ADMIN TAMBAH KAVLING BARU -->
+  <div class="admin-modal-overlay" id="adminAddUnitModal" onclick="if(event.target === this) closeAddUnitModal()">
+    <div class="admin-modal-card">
+      <button type="button" onclick="closeAddUnitModal()" class="modal-close-cross-btn">&times;</button>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+        <div style="width: 38px; height: 38px; border-radius: 8px; background: #ecfdf5; color: #059669; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+          🏠
+        </div>
+        <div>
+          <h3 style="font-size: 1.1rem; font-weight: 800; color: #0f172a;">Tambah Unit Kavling Baru</h3>
+          <p style="font-size: 0.72rem; color: #64748b;">Rincian spesifikasi fisik & skema pembiayaan perumahan</p>
+        </div>
+      </div>
+
+      <div class="admin-form-grid-2">
+        <div class="form-field-unit">
+          <label>Kode Blok Kavling:</label>
+          <input type="text" class="field-input-control" id="newUnitCode" placeholder="Contoh: BLOK A-05">
+        </div>
+        <div class="form-field-unit">
+          <label>Cluster Perumahan:</label>
+          <select class="field-input-control" id="newUnitCluster">
+            <option value="Grand Alessandra Residence">Grand Alessandra Residence (Sukarame)</option>
+            <option value="Villa Permata Indah">Villa Permata Indah (Kedaton)</option>
+            <option value="Sentral Garden Residence">Sentral Garden Residence (Natar)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="admin-form-grid-2">
+        <div class="form-field-unit">
+          <label>Tipe Rumah (LB / LT):</label>
+          <input type="text" class="field-input-control" id="newUnitType" placeholder="Contoh: Tipe 45 / 90">
+        </div>
+        <div class="form-field-unit">
+          <label>Harga Jual Resmi:</label>
+          <input type="text" class="field-input-control" id="newUnitPrice" placeholder="Contoh: Rp 395.000.000">
+        </div>
+      </div>
+
+      <div class="admin-form-grid-2">
+        <div class="form-field-unit">
+          <label>Jumlah Kamar Tidur / Mandi:</label>
+          <input type="text" class="field-input-control" id="newUnitRooms" placeholder="Contoh: 2 KT / 1 KM">
+        </div>
+        <div class="form-field-unit">
+          <label>Daya Listrik & Air:</label>
+          <input type="text" class="field-input-control" id="newUnitUtility" placeholder="Contoh: PLN 1300 VA & Sumur Bor">
+        </div>
+      </div>
+
+      <div class="form-field-unit">
+        <label>Promo Pembiayaan & Subsidi DP:</label>
+        <input type="text" class="field-input-control" id="newUnitPromo" placeholder="Contoh: Promo DP 0% & Free Biaya Notaris">
+      </div>
+
+      <div class="form-field-unit">
+        <label>Deskripsi Keunggulan Kavling:</label>
+        <textarea class="field-input-control" id="newUnitDesc" rows="2" placeholder="Tuliskan keunggulan lokasi dan spesifikasi bangunan..."></textarea>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 18px; justify-content: flex-end;">
+        <button type="button" class="btn-switch-secondary" onclick="closeAddUnitModal()">Batal</button>
+        <button type="button" class="btn-admin-action primary" style="padding: 10px 18px;" onclick="submitNewUnitForm()">Simpan Kavling Baru</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BAP PERBAIKAN TEKNISI -->
+  <div class="admin-modal-overlay" id="adminBapModal" onclick="if(event.target === this) closeBapModal()">
+    <div class="admin-modal-card" style="max-width: 500px;">
+      <button type="button" onclick="closeBapModal()" class="modal-close-cross-btn">&times;</button>
+      <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 14px;">
+        <div style="font-size: 1rem; font-weight: 800; color: #0f172a; letter-spacing: 0.05em;">BERITA ACARA PENGERJAAN (BAP)</div>
+        <div style="font-size: 0.7rem; color: #64748b;">DIVISI PEMELIHARAAN & RETENSI GARANSI PENGEMBANG</div>
+      </div>
+
+      <div style="font-size: 0.74rem; color: #334155; line-height: 1.6; margin-bottom: 14px;" id="bapContentTarget">
+        <!-- Content injected by admin.js -->
+      </div>
+
+      <div style="display: flex; justify-content: space-between; text-align: center; margin-top: 24px; padding-top: 14px; border-top: 1px dashed #cbd5e1; font-size: 0.72rem;">
+        <div>
+          <div style="color: #64748b;">Teknisi Pelaksana</div>
+          <div style="margin-top: 36px; font-weight: 800; color: #0f172a;" id="bapTechSignName">Mas Yanto</div>
+          <div style="font-size: 0.62rem; color: #10b981;">✓ Terverifikasi Lapangan</div>
+        </div>
+        <div>
+          <div style="color: #64748b;">Penghuni Kavling</div>
+          <div style="margin-top: 36px; font-weight: 800; color: #0f172a;">Ibu Ratna (Blok B-05)</div>
+          <div style="font-size: 0.62rem; color: #0284c7;">✓ Konsumen Sah</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; text-align: right;">
+        <button type="button" class="btn-admin-action primary" onclick="confirmBapResolution()">Sahkan & Tandai Selesai</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modular Scripts Architecture -->
+  <script src="js/store.js?v=20261001_4"></script>
+  <script src="js/catalog.js?v=20261001_4"></script>
+  <script src="js/booking.js?v=20261001_4"></script>
+  <script src="js/chat.js?v=20261001_4"></script>
+  <script src="js/resident.js?v=20261001_4"></script>
+  <script src="js/admin.js?v=20261001_4"></script>
+  <script src="js/companion.js?v=20261001_4"></script>
+  <script src="js/app.js?v=20261001_4"></script>
+
+</body>
+</html>
