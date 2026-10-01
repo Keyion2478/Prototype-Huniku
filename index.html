@@ -923,7 +923,24 @@
                       <h3 id="adminPageHeaderTitle">Manajemen Inventaris Kavling</h3>
                       <p id="adminPageHeaderSubtitle">Kontrol ketersediaan unit real-time, spesifikasi, dan skema pembiayaan perumahan.</p>
                     </div>
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                      <!-- Pusat Notifikasi Badge Lonceng Admin -->
+                      <div class="admin-notification-bell-wrap">
+                        <button type="button" class="btn-admin-bell" id="btnAdminNotifBell" onclick="toggleAdminNotifPopover()" title="Pusat Notifikasi Aktivitas Admin">
+                          <span style="font-size: 1.1rem;">🔔</span>
+                          <span class="admin-bell-badge" id="adminNotifBadge">0</span>
+                        </button>
+                        <div class="admin-notif-popover" id="adminNotifPopover" style="display: none;">
+                          <div class="notif-popover-header">
+                            <strong>Pusat Notifikasi Admin</strong>
+                            <span class="notif-popover-tag" id="adminNotifCountTag">0 Baru</span>
+                          </div>
+                          <div class="notif-popover-list" id="adminNotifListTarget">
+                            <!-- Populated dynamically by admin.js -->
+                          </div>
+                        </div>
+                      </div>
+
                       <button type="button" class="btn-admin-action primary" onclick="openAddUnitModal()">
                         <span>+ Tambah Unit Kavling</span>
                       </button>
@@ -1043,6 +1060,7 @@
                               <th>No Tiket</th>
                               <th>Penghuni / Kavling</th>
                               <th>Kendala & Preferensi Waktu</th>
+                              <th>Target SLA (1x24 Jam)</th>
                               <th>Penugasan Teknisi</th>
                               <th>Status</th>
                               <th>Aksi Komunikasi</th>
@@ -1666,15 +1684,53 @@
     </div>
   </div>
 
+  <!-- MODAL: VERIFIKASI BAST & KTP PENGHUNI BARU -->
+  <div class="admin-modal-overlay" id="adminBastVerifyModal" onclick="if(event.target === this) closeBastVerifyModal()">
+    <div class="admin-modal-card" style="max-width: 520px;">
+      <button type="button" onclick="closeBastVerifyModal()" class="modal-close-cross-btn">&times;</button>
+      <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 14px;">
+        <div style="font-size: 1rem; font-weight: 800; color: #0f172a; letter-spacing: 0.05em;">VERIFIKASI BAST & KTP PENGHUNI BARU</div>
+        <div style="font-size: 0.7rem; color: #64748b;">DIVISI LEGAL & OPERASIONAL ESTATE HUNIKU</div>
+      </div>
+
+      <div style="font-size: 0.74rem; color: #334155; line-height: 1.6; margin-bottom: 14px;" id="bastVerifyContentTarget">
+        <!-- Content injected by admin.js -->
+      </div>
+
+      <div class="bast-checklist-wrap" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+        <div style="font-size: 0.75rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">Checklist Dokumen Wajib Validasi:</div>
+        <label style="display: flex; gap: 8px; align-items: center; font-size: 0.73rem; color: #334155; margin-bottom: 6px; cursor: pointer;">
+          <input type="checkbox" id="chkKtpValid" checked>
+          <span><strong>1. KTP Asli Pemohon:</strong> Data kependudukan identik dengan berkas akad KPR.</span>
+        </label>
+        <label style="display: flex; gap: 8px; align-items: center; font-size: 0.73rem; color: #334155; margin-bottom: 6px; cursor: pointer;">
+          <input type="checkbox" id="chkBastValid" checked>
+          <span><strong>2. Lembar BAST Fisik:</strong> Kunci rumah & fisik kavling resmi diserahterimakan.</span>
+        </label>
+        <label style="display: flex; gap: 8px; align-items: center; font-size: 0.73rem; color: #334155; cursor: pointer;">
+          <input type="checkbox" id="chkUtilitasValid" checked>
+          <span><strong>3. Utilitas Lingkungan:</strong> Meteran air bersih & token listrik siap huni.</span>
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button type="button" class="btn-switch-secondary" onclick="closeBastVerifyModal()">Tutup</button>
+        <button type="button" class="btn-admin-action primary" style="background: #166534;" onclick="confirmBastApproval()">
+          ✓ Sahkan Warga & Aktivasi Portal
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modular Scripts Architecture -->
-  <script src="js/store.js?v=20261001_4"></script>
-  <script src="js/catalog.js?v=20261001_4"></script>
-  <script src="js/booking.js?v=20261001_4"></script>
-  <script src="js/chat.js?v=20261001_4"></script>
-  <script src="js/resident.js?v=20261001_4"></script>
-  <script src="js/admin.js?v=20261001_4"></script>
-  <script src="js/companion.js?v=20261001_4"></script>
-  <script src="js/app.js?v=20261001_4"></script>
+  <script src="js/store.js?v=20261001_5"></script>
+  <script src="js/catalog.js?v=20261001_5"></script>
+  <script src="js/booking.js?v=20261001_5"></script>
+  <script src="js/chat.js?v=20261001_5"></script>
+  <script src="js/resident.js?v=20261001_5"></script>
+  <script src="js/admin.js?v=20261001_5"></script>
+  <script src="js/companion.js?v=20261001_5"></script>
+  <script src="js/app.js?v=20261001_5"></script>
 
 </body>
 </html>

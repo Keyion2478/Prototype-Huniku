@@ -231,6 +231,18 @@ function renderResidentTickets() {
            </div>
          </div>`;
 
+    const techInfoRow = `
+      <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px 10px; margin: 8px 0; font-size: 0.68rem;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span>👷</span>
+          <span style="font-weight: 700; color: #0f172a;">Teknisi: ${item.assignedTechnician || 'Mas Yanto (Sipil/Plafon)'}</span>
+        </div>
+        <div style="color: ${isResolved ? '#15803d' : '#1d4ed8'}; font-weight: 700; font-size: 0.65rem;">
+          ⏱️ Target SLA 1x24 Jam: ${isResolved ? 'Selesai Tepat Waktu' : 'Sedang Berjalan (On-Track)'}
+        </div>
+      </div>
+    `;
+
     card.innerHTML = `
       <div class="ticket-header-row">
         <div class="ticket-id">${item.id}</div>
@@ -238,6 +250,7 @@ function renderResidentTickets() {
       </div>
       <div class="ticket-desc">${item.notes}</div>
       <div class="ticket-resolution">${item.resolution}</div>
+      ${techInfoRow}
       ${stepper}
       <div class="ticket-footer-row">
         <span>Kategori: ${categoryLabel} • ${item.date}</span>

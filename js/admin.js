@@ -11,6 +11,73 @@
 
 let currentAdminTab = "inventory";
 let activeBapTicketId = null;
+let activeBastUnitId = null;
+
+function toggleAdminNotifPopover() {
+  const popover = document.getElementById("adminNotifPopover");
+  if (!popover) return;
+  const isHidden = popover.style.display === "none";
+  popover.style.display = isHidden ? "block" : "none";
+  if (isHidden) {
+    renderAdminNotifList();
+  }
+}
+
+function renderAdminNotifList() {
+  const target = document.getElementById("adminNotifListTarget");
+  if (!target) return;
+  target.innerHTML = "";
+
+  const units = window.store.units || [];
+  const complaints = window.store.complaints || [];
+  const booked = units.filter(u => u.status === "BOOKED");
+  const pendingTickets = complaints.filter(c => c.status === "IN_PROGRESS");
+
+  const notifs = [];
+
+  booked.forEach(u => {
+    notifs.push({
+      title: `📑 Verifikasi Booking KPR: ${u.code}`,
+      desc: `Kavling ${u.code} (${u.cluster}) menunggu approval KPR & BAST.`,
+      time: "Batas 15m",
+      action: () => {
+        switchAdminTab("booking");
+        toggleAdminNotifPopover();
+      }
+    });
+  });
+
+  pendingTickets.forEach(c => {
+    notifs.push({
+      title: `🛠️ Komplain Warga: ${c.id}`,
+      desc: `Laporan di ${c.unit} (${c.category}) butuh disposisi teknisi (SLA 1x24 jam).`,
+      time: c.date || "Hari ini",
+      action: () => {
+        switchAdminTab("tickets");
+        toggleAdminNotifPopover();
+      }
+    });
+  });
+
+  if (notifs.length === 0) {
+    target.innerHTML = `<div style="padding: 16px; text-align: center; color: #94a3b8; font-size: 0.72rem;">Tidak ada antrean pending. Semua sistem normal!</div>`;
+    return;
+  }
+
+  notifs.forEach(n => {
+    const item = document.createElement("div");
+    item.className = "notif-popover-item";
+    item.innerHTML = `
+      <div class="notif-item-title">
+        <span>${n.title}</span>
+        <span class="notif-item-time">${n.time}</span>
+      </div>
+      <div class="notif-item-desc">${n.desc}</div>
+    `;
+    item.onclick = n.action;
+    target.appendChild(item);
+  });
+}
 
 function switchAdminTab(tabName) {
   currentAdminTab = tabName;
@@ -100,6 +167,18 @@ function renderAdminDesk() {
   if (badgeUnits) badgeUnits.innerText = units.length;
   if (badgeBookings) badgeBookings.innerText = countBooked;
   if (badgeTickets) badgeTickets.innerText = countActiveTickets;
+
+  // Update Lonceng Notifikasi Badge
+  const notifBadge = document.getElementById("adminNotifBadge");
+  const notifTag = document.getElementById("adminNotifCountTag");
+  const totalNotif = countBooked + countActiveTickets;
+  if (notifBadge) {
+    notifBadge.innerText = totalNotif;
+    notifBadge.style.display = totalNotif > 0 ? "flex" : "none";
+  }
+  if (notifTag) {
+    notifTag.innerText = `${totalNotif} Baru`;
+  }
 
   // Render Sub-Views
   renderAdminUnitsTable();
@@ -315,7 +394,10 @@ function renderBookingQueue() {
       </div>
       <div class="verify-actions-row">
         <button type="button" class="btn-admin-action primary" onclick="approveBuyerBooking('${u.id}')" title="Sahkan berkas KPR dan ubah kavling menjadi SOLD">
-          ✓ Lolos KPR (Set SOLD)
+          ✓ Lolos KPR
+        </button>
+        <button type="button" class="btn-admin-action" style="background: #166534; color: #ffffff;" onclick="openBastVerifyModal('${u.id}')" title="Verifikasi BAST & KTP untuk aktivasi Portal Warga">
+          📜 Validasi BAST & KTP
         </button>
         <button type="button" class="btn-admin-action chat" onclick="openChatFromAdminWithBuyer('${u.id}')" title="Buka obrolan langsung dengan calon pembeli">
           💬 Chat Pembeli
@@ -421,6 +503,9 @@ function renderAdminTicketsTable() {
     const tr = document.createElement("tr");
 
     const isResolved = c.status === "RESOLVED";
+    const slaBadge = isResolved
+      ? `<span class="sla-badge-done">✓ SLA Terpenuhi<br><span style="font-size: 0.6rem; color:#15803d; font-weight:600;">Pengerjaan Tuntas</span></span>`
+      : `<span class="sla-badge-ontrack">⏱️ Target 1x24 Jam<br><span style="font-size: 0.6rem; color:#1d4ed8; font-weight:600;">Sisa 16 Jam (On-track)</span></span>`;
 
     tr.innerHTML = `
       <td>
@@ -431,17 +516,20 @@ function renderAdminTicketsTable() {
         <div style="font-weight: 700;">Ibu Ratna (${c.unit})</div>
         <div style="font-size: 0.65rem; color: #10b981; font-weight: 600;">Kategori: ${c.category}</div>
       </td>
-      <td style="max-width: 220px;">
+      <td style="max-width: 200px;">
         <div style="font-weight: 600; color: #1e293b; font-size: 0.74rem;">${c.notes}</div>
         <div style="font-size: 0.66rem; color: #64748b; margin-top: 2px;">
           Preferensi: ${c.visitPreference || 'Hari Kerja (08:30–11:30)'}
         </div>
       </td>
       <td>
+        ${slaBadge}
+      </td>
+      <td>
         <select class="status-select-control" onchange="dispatchTechnicianFromAdmin('${c.id}', this.value)">
-          <option value="Mas Yanto (Teknisi Sipil/Plafon)">Mas Yanto (Sipil/Plafon)</option>
-          <option value="Mas Joko (Teknisi Plumbing)">Mas Joko (Plumbing/Air)</option>
-          <option value="Pak Asep (Teknisi Fasum/Listrik)">Pak Asep (Fasum/Listrik)</option>
+          <option value="Mas Yanto (Teknisi Sipil/Plafon)" ${c.assignedTechnician && c.assignedTechnician.includes('Yanto') ? 'selected' : ''}>Mas Yanto (Sipil/Plafon)</option>
+          <option value="Mas Joko (Teknisi Plumbing)" ${c.assignedTechnician && c.assignedTechnician.includes('Joko') ? 'selected' : ''}>Mas Joko (Plumbing/Air)</option>
+          <option value="Pak Asep (Teknisi Fasum/Listrik)" ${c.assignedTechnician && c.assignedTechnician.includes('Asep') ? 'selected' : ''}>Pak Asep (Fasum/Listrik)</option>
         </select>
       </td>
       <td>
@@ -475,11 +563,15 @@ function dispatchTechnicianFromAdmin(ticketId, techName) {
       "DISPATCH_TEKNISI",
       `Tiket ${t.id}`,
       "Koordinator Pemeliharaan",
-      `Teknisi lapangan ${techName} ditugaskan untuk menangani komplain di ${t.unit}.`,
+      `Teknisi lapangan ${techName} ditugaskan untuk menangani komplain di ${t.unit} (Target SLA 1x24 jam).`,
       "PENDING"
     );
 
-    window.app.showToast(`Teknisi ${techName} berhasil ditugaskan ke tiket ${t.id}`);
+    window.app.showToast(`Teknisi ${techName} ditugaskan! SLA 1x24 jam aktif.`);
+    renderAdminDesk();
+    if (typeof renderResidentTickets === "function") {
+      renderResidentTickets();
+    }
   }
 }
 
@@ -631,6 +723,71 @@ function confirmBapResolution() {
     updateTicketStatusFromAdmin(activeBapTicketId, "RESOLVED");
     closeBapModal();
     window.app.showToast("BAP berhasil disahkan dan keluhan ditandai selesai.");
+  }
+}
+
+/* ======================================================== */
+/* 6B. BAST & RESIDENT VERIFICATION MODAL                   */
+/* ======================================================== */
+function openBastVerifyModal(unitId) {
+  const u = window.store.units.find(x => x.id === unitId);
+  if (!u) return;
+
+  activeBastUnitId = unitId;
+  const target = document.getElementById("bastVerifyContentTarget");
+  const modal = document.getElementById("adminBastVerifyModal");
+
+  if (target) {
+    target.innerHTML = `
+      <div style="background: #f1f5f9; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 12px;">
+        <div style="font-size: 0.8rem; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Kavling: ${u.code} (${u.cluster})</div>
+        <div><strong>Tipe Bangunan:</strong> ${u.type} • Luas ${u.landSize}</div>
+        <div><strong>Nilai Transaksi:</strong> ${u.price} (Skema Pembiayaan Bank)</div>
+        <div style="margin-top: 4px; color: #166534; font-weight: 700;">Status Saat Ini: HOLD (Dipesan Tanda Jadi)</div>
+      </div>
+      <div style="font-size: 0.72rem; color: #64748b; margin-bottom: 8px; line-height: 1.45;">
+        Verifikasi fisik Berita Acara Serah Terima (BAST) dan KTP konsumen wajib dilakukan sebelum kavling dialihkan ke status <strong>TERJUAL (SOLD)</strong> dan akun pembeli diizinkan mengakses <strong>Portal Layanan Warga (Resident Desk)</strong>.
+      </div>
+    `;
+  }
+
+  if (modal) modal.style.display = "flex";
+}
+
+function closeBastVerifyModal() {
+  const modal = document.getElementById("adminBastVerifyModal");
+  if (modal) modal.style.display = "none";
+  activeBastUnitId = null;
+}
+
+function confirmBastApproval() {
+  if (!activeBastUnitId) return;
+
+  const chkKtp = document.getElementById("chkKtpValid");
+  const chkBast = document.getElementById("chkBastValid");
+
+  if ((chkKtp && !chkKtp.checked) || (chkBast && !chkBast.checked)) {
+    alert("Harap centang validasi KTP Asli dan Lembar BAST Fisik terlebih dahulu!");
+    return;
+  }
+
+  const u = window.store.units.find(x => x.id === activeBastUnitId);
+  if (u) {
+    u.status = "SOLD";
+    window.store.save();
+
+    window.store.addAuditLog(
+      "BAST_VERIFIED",
+      `Kavling ${u.code}`,
+      "Legal & Estate Manager",
+      `Dokumen BAST fisik & KTP penghuni resmi disahkan. Unit ${u.code} diserahterimakan dan akses Portal Warga diaktifkan.`,
+      "RESOLVED"
+    );
+
+    closeBastVerifyModal();
+    window.app.showToast(`BAST & KTP ${u.code} Disahkan! Portal Warga resmi diaktifkan.`);
+    renderAdminDesk();
+    renderCatalog();
   }
 }
 
