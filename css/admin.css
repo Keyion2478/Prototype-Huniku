@@ -92,13 +92,14 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
 }
 
 .admin-nav-list {
@@ -134,9 +135,9 @@
 
 .admin-nav-btn.active {
   background: #1e293b;
-  color: #34d399;
+  color: #60a5fa;
   font-weight: 700;
-  box-shadow: inset 3px 0 0 #10b981;
+  box-shadow: inset 3px 0 0 #2563eb;
 }
 
 .admin-nav-btn .nav-left {
@@ -155,8 +156,8 @@
 }
 
 .admin-nav-btn.active .admin-nav-badge {
-  background: rgba(16, 185, 129, 0.2);
-  color: #34d399;
+  background: rgba(37, 99, 235, 0.25);
+  color: #93c5fd;
 }
 
 /* MAIN STAGE */
@@ -314,7 +315,7 @@
 }
 
 .status-select-control:focus {
-  border-color: #10b981;
+  border-color: #2563eb;
 }
 
 .btn-admin-action {
@@ -333,21 +334,22 @@
 }
 
 .btn-admin-action.primary {
-  background: #10b981;
-  border-color: #059669;
+  background: #2563eb;
+  border-color: #1d4ed8;
   color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 .btn-admin-action.primary:hover {
-  background: #059669;
+  background: #1d4ed8;
 }
 
 .btn-admin-action.chat {
-  background: #f0fdf4;
-  border-color: #86efac;
-  color: #15803d;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
 }
 .btn-admin-action.chat:hover {
-  background: #dcfce7;
+  background: #dbeafe;
 }
 
 .btn-admin-action.danger {
@@ -390,7 +392,7 @@
   height: 12px;
   border-radius: 3px;
 }
-.legend-dot.available { background: #10b981; }
+.legend-dot.available { background: #2563eb; }
 .legend-dot.booked { background: #f59e0b; }
 .legend-dot.sold { background: #64748b; }
 .legend-dot.sita { background: #ef4444; }
@@ -444,9 +446,9 @@
 }
 
 .site-lot-card.AVAILABLE {
-  background: #ecfdf5;
-  border-color: #10b981;
-  color: #065f46;
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
 }
 .site-lot-card.BOOKED {
   background: #fffbeb;
@@ -739,7 +741,7 @@
 }
 
 .notif-popover-tag {
-  background: #10b981;
+  background: #2563eb;
   color: #ffffff;
   font-size: 0.62rem;
   font-weight: 800;

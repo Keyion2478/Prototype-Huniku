@@ -1,5 +1,8 @@
+node_modules/
+package-lock.json
 .DS_Store
 Thumbs.db
 *.log
 .vscode/
 .idea/
+assets/current_proposal_images/

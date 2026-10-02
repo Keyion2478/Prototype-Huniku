@@ -260,20 +260,33 @@
 
 /* HERO ACTION CARD (BUAT PENGADUAN BARU) */
 .resident-action-hero-card {
-  background: linear-gradient(135deg, #153e2d 0%, #0d281c 100%);
-  border-radius: var(--radius-sm);
-  padding: 16px;
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%);
+  border-radius: 18px;
+  padding: 18px 20px;
   margin: 0 18px 16px;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  box-shadow: 0 4px 14px rgba(21, 62, 45, 0.22);
+  box-shadow: 0 10px 25px -4px rgba(37, 99, 235, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.resident-action-hero-card::after {
+  content: "";
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .hero-action-text h4 {
-  font-size: 0.92rem;
+  font-size: 0.94rem;
   font-weight: 800;
   margin-bottom: 3px;
   color: #ffffff;
@@ -281,29 +294,30 @@
 
 .hero-action-text p {
   font-size: 0.7rem;
-  color: #bbf7d0;
-  line-height: 1.35;
+  color: #dbeafe;
+  line-height: 1.4;
 }
 
 .btn-open-complaint {
   background: #ffffff;
-  color: #153e2d;
+  color: #1d4ed8;
   font-weight: 800;
   font-size: 0.74rem;
-  padding: 10px 14px;
-  border-radius: var(--radius-xs);
+  padding: 9px 15px;
+  border-radius: 99px;
   border: none;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  transition: all 0.15s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  z-index: 2;
 }
 
 .btn-open-complaint:hover {
-  background: #f0fdf4;
+  background: #f8fafc;
   transform: translateY(-1px);
 }
 
@@ -316,27 +330,28 @@
 }
 
 .resident-filter-pill {
-  background: var(--surface-card);
-  border: 1px solid var(--border-mid);
-  padding: 6px 12px;
+  background: #f1f5f9;
+  border: 1px solid transparent;
+  padding: 6px 14px;
   border-radius: 9999px;
   font-size: 0.7rem;
   font-weight: 700;
-  color: var(--text-muted);
+  color: #475569;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.15s ease;
 }
 
 .resident-filter-pill:hover {
-  border-color: var(--brand-accent);
-  color: var(--text-main);
+  background: #e2e8f0;
+  color: #0f172a;
 }
 
 .resident-filter-pill.active {
-  background: var(--brand-primary);
-  border-color: var(--brand-primary);
+  background: #2563eb;
+  border-color: #2563eb;
   color: #ffffff;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.28);
 }
 
 /* COMPLAINT MODAL */

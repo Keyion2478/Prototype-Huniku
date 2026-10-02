@@ -1,0 +1,10 @@
+{
+  "name": "prototype-huniku",
+  "version": "1.0.0",
+  "scripts": {
+    "capture": "node scripts/capture_all_proposal_screenshots.js"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.12.0"
+  }
+}

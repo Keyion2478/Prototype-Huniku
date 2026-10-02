@@ -14,11 +14,11 @@
   --text-tertiary: #8b99a7;
   --text-inverse: #ffffff;
 
-  --brand-primary: #153e2d;
-  --brand-primary-hover: #0e2a1e;
-  --brand-primary-light: #e8f3ed;
-  --brand-accent: #266b4f;
-  --brand-gold: #c2882a;
+  --brand-primary: #2563eb;
+  --brand-primary-hover: #1d4ed8;
+  --brand-primary-light: #eff6ff;
+  --brand-accent: #3b82f6;
+  --brand-gold: #f59e0b;
 
   --status-avail-bg: #ebfbee;
   --status-avail-text: #1b6d33;
@@ -92,7 +92,7 @@ body {
 }
 
 .studio-emblem {
-  background: var(--brand-accent);
+  background: #2563eb;
   color: white;
   width: 32px;
   height: 32px;
@@ -102,7 +102,7 @@ body {
   justify-content: center;
   font-weight: 800;
   font-size: 0.92rem;
-  box-shadow: 0 2px 8px rgba(38, 107, 79, 0.35);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
 }
 
 .studio-heading {
@@ -120,7 +120,7 @@ body {
   padding: 2px 8px;
   background: #1c232d;
   border: 1px solid #2d3846;
-  color: #7ee7a6;
+  color: #93c5fd;
   border-radius: 4px;
   font-family: var(--font-mono);
 }
@@ -162,9 +162,10 @@ body {
 }
 
 .role-tab-btn.active {
-  background: var(--brand-primary);
-  color: #7ee7a6;
+  background: #2563eb;
+  color: #ffffff;
   font-weight: 700;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
 }
 
 .btn-studio-tool {
@@ -188,9 +189,9 @@ body {
 }
 
 .btn-studio-tool.active-companion {
-  border-color: #2ea043;
-  color: #7ee7a6;
-  background: rgba(46, 160, 67, 0.15);
+  border-color: #3b82f6;
+  color: #93c5fd;
+  background: rgba(37, 99, 235, 0.18);
 }
 
 /* MAIN SPLIT WORKSPACE */

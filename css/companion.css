@@ -34,9 +34,9 @@
   font-size: 0.65rem;
   font-weight: 700;
   font-family: var(--font-mono);
-  background: rgba(46, 160, 67, 0.15);
-  color: #7ee7a6;
-  border: 1px solid rgba(46, 160, 67, 0.35);
+  background: rgba(37, 99, 235, 0.15);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.35);
   padding: 3px 8px;
   border-radius: 4px;
 }
@@ -60,7 +60,7 @@
 .guide-step-title {
   font-size: 0.76rem;
   font-weight: 800;
-  color: #7ee7a6;
+  color: #60a5fa;
   margin-bottom: 6px;
   display: flex;
   align-items: center;
@@ -109,7 +109,7 @@
 .notes-auto-save-tag {
   font-size: 0.62rem;
   font-family: var(--font-mono);
-  color: #7ee7a6;
+  color: #60a5fa;
 }
 
 .notes-textarea-control {
@@ -128,7 +128,7 @@
 }
 
 .notes-textarea-control:focus {
-  border-color: #2ea043;
+  border-color: #2563eb;
 }
 
 .notes-action-buttons {

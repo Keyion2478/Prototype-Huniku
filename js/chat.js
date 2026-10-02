@@ -12,20 +12,23 @@ function startQuickChat(unitId) {
 }
 
 function openChatWithSales() {
-  window.store.activeChatType = "SALES";
+  window.store.activeChatType = "CS";
   restoreBuyerQuickSuggestions();
 
   const u = window.store.activeUnit;
-  document.getElementById("chatAvatarBadge").innerText = "SL";
-  document.getElementById("chatPersonName").innerText = "Doni - Sales Lapangan";
-  document.getElementById("chatPersonRole").innerText = "Konsultasi Wilayah & Jadwal Survei";
+  const avatarEl = document.getElementById("chatAvatarBadge");
+  const nameEl = document.getElementById("chatPersonName");
+  const roleEl = document.getElementById("chatPersonRole");
+  if (avatarEl) avatarEl.innerText = "CS";
+  if (nameEl) nameEl.innerText = "Doni - CS Resmi Kantor Pemasaran";
+  if (roleEl) roleEl.innerText = "Pusat Verifikasi Unit & Jadwal Survei";
   const contextCard = document.getElementById("chatContextCard");
   if (contextCard) contextCard.style.display = "none";
 
   window.store.chatHistory = [
     {
       sender: "agent",
-      text: `Halo! Saya Doni, representatif lapangan kawasan ${u ? u.cluster : 'Huniku Lampung'}. Apakah ada pertanyaan seputar kavling atau ingin menjadwalkan survei fisik ke perumahan besok?`,
+      text: `Halo Bapak/Ibu! Saya Doni dari Customer Service Resmi Pengembang Huniku (${u ? u.cluster : 'Lampung'}). Kami melayani standarisasi informasi harga resmi, legalitas sertifikat SHM, serta penjadwalan survei fisik lapangan bersama sales pendamping kami. Ada yang ingin Anda konsultasikan?`,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ];
@@ -104,11 +107,12 @@ function openChatWithEstateAdmin(ticketId) {
   const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   const isResolved = ticket.status === "RESOLVED";
 
+  const userName = (window.store.buyerProfile && window.store.buyerProfile.fullName) ? window.store.buyerProfile.fullName : "Rizky Pratama";
   let greetingText = "";
   if (isResolved) {
-    greetingText = `Halo Ibu Ratna! Saya ${adminName}. Terkait laporan [${ticket.id}] mengenai "${ticket.notes}", status di sistem kami sudah selesai diperbaiki. Apakah ada kendala susulan yang perlu kami cek kembali?`;
+    greetingText = `Halo Bapak/Ibu ${userName}! Saya ${adminName}. Terkait laporan [${ticket.id}] mengenai "${ticket.notes}", status di sistem kami sudah selesai diperbaiki. Apakah ada kendala susulan yang perlu kami cek kembali?`;
   } else {
-    greetingText = `Halo Ibu Ratna! Saya ${adminName}. Laporan kendala [${ticket.id}] mengenai "${ticket.notes}" sudah kami terima dan didisposisikan ke ${techOfficer}. Seluruh perbaikan ditanggung garansi developer (Bebas Biaya). Apakah ada catatan khusus terkait akses atau jam kedatangan teknisi?`;
+    greetingText = `Halo Bapak/Ibu ${userName}! Saya ${adminName}. Laporan kendala [${ticket.id}] mengenai "${ticket.notes}" sudah kami terima dan didisposisikan ke ${techOfficer}. Seluruh perbaikan ditanggung garansi developer (Bebas Biaya). Apakah ada catatan khusus terkait akses atau jam kedatangan teknisi?`;
   }
 
   window.store.chatHistory = [
@@ -140,10 +144,10 @@ function restoreBuyerQuickSuggestions() {
   if (!container) return;
 
   container.innerHTML = `
-    <div class="quick-suggestion-item" onclick="submitQuickPrompt('Berkas KPR sudah lengkap sesuai checklist aplikasi.')">Berkas KPR Lengkap</div>
-    <div class="quick-suggestion-item" onclick="submitQuickPrompt('Mohon jadwal survei fisik lokasi kavling besok pagi.')">Jadwal Survei Lokasi</div>
-    <div class="quick-suggestion-item" onclick="submitQuickPrompt('Apakah sertifikat SHM sudah pecah per kavling?')">Status SHM Pecah?</div>
-    <div class="quick-suggestion-item" onclick="submitQuickPrompt('Apakah pembayaran uang muka (DP) dapat dicicil?')">Cicilan Uang Muka (DP)</div>
+    <div class="quick-suggestion-item" onclick="submitQuickPrompt('Mohon jadwal survei fisik lokasi kavling bersama sales lapangan.')">📅 Jadwal Survei Lapangan</div>
+    <div class="quick-suggestion-item" onclick="submitQuickPrompt('Apakah sertifikat SHM dan PBG sudah pecah per kavling?')">Status Legalitas SHM</div>
+    <div class="quick-suggestion-item" onclick="submitQuickPrompt('Bagaimana syarat kelayakan KPR bank rekanan?')">Syarat Berkas KPR</div>
+    <div class="quick-suggestion-item" onclick="submitQuickPrompt('Apakah tersedia skema Cash Bertahap langsung ke developer?')">Cash Bertahap Developer</div>
   `;
 }
 
@@ -245,21 +249,25 @@ function sendChatMessage() {
       } else if (lower.includes("biaya") || lower.includes("gratis") || lower.includes("bayar") || lower.includes("tarif")) {
         reply = "Kavling Blok B-05 masih dalam masa retensi garansi developer aktif (142 hari tersisa). Seluruh jasa pengerjaan dan penggantian material/suku cadang 100% BEBAS BIAYA (Gratis).";
       } else if (lower.includes("bap") || lower.includes("selesai") || lower.includes("serah terima")) {
-        reply = "Betul Ibu Ratna. Setelah perbaikan fisik tuntas dan diuji coba bersama Anda, mohon tanda tangani lembar Berita Acara Pengerjaan (BAP) sebagai verifikasi bahwa keluhan telah terselesaikan dengan baik.";
+        const userName = (window.store.buyerProfile && window.store.buyerProfile.fullName) ? window.store.buyerProfile.fullName : "Bapak/Ibu";
+        reply = `Betul ${userName}. Setelah perbaikan fisik tuntas dan diuji coba bersama Anda, mohon tanda tangani lembar Berita Acara Pengerjaan (BAP) sebagai verifikasi bahwa keluhan telah terselesaikan dengan baik.`;
       } else if (lower.includes("foto") || lower.includes("rusak") || lower.includes("gambar")) {
         reply = "Silakan lampirkan foto fisik melalui tombol klip kertas (📎) di samping kiri. Foto tersebut langsung kami teruskan ke koordinator teknisi untuk penyiapan material yang presisi.";
       } else {
-        reply = `Pesan Anda mengenai tiket [${ticket.id || 'pengaduan'}] telah dicatat oleh sistem pengelola estate. Kami terus memantau proses perbaikan agar kavling Ibu Ratna kembali nyaman dan terawat.`;
+        const userName = (window.store.buyerProfile && window.store.buyerProfile.fullName) ? window.store.buyerProfile.fullName : "Bapak/Ibu";
+        reply = `Pesan Anda mengenai tiket [${ticket.id || 'pengaduan'}] telah dicatat oleh sistem pengelola estate. Kami terus memantau proses perbaikan agar kavling ${userName} kembali nyaman dan terawat.`;
       }
     } else {
       if (lower.includes("kpr") || lower.includes("berkas") || lower.includes("syarat")) {
-        reply = "Tentu! Untuk pengajuan KPR, Anda dapat melampirkan file dokumen e-KTP, KK, NPWP, dan slip gaji melalui tombol klip kertas (📎) di samping kiri kolom chat ini.";
+        reply = "Tentu! Untuk pengajuan KPR, berkas wajib meliputi e-KTP, KK, NPWP, Slip Gaji 3 bulan, Rekening Koran 3 bulan, dan SK Kerja aktif. Anda dapat melampirkan file dokumen via tombol klip kertas (📎) di samping kiri kolom chat ini untuk pra-verifikasi CS sebelum ke bank.";
       } else if (lower.includes("survei") || lower.includes("lokasi") || lower.includes("besok")) {
-        reply = "Siap Bapak/Ibu. Tim lapangan kami siap mendampingi survei lokasi besok pukul 10:00 atau 14:00 WIB. Anda juga bisa membagikan titik lokasi jemputan via tombol 📎 -> Bagi Lokasi.";
+        reply = "Baik Bapak/Ibu! Tim CS telah mencatat permintaan survei Anda. Kami telah mendisposisikan Sdr. Hendra (Sales Lapangan Resmi) untuk mendampingi Anda di lokasi kavling besok pukul 09:30 WIB. Titik temu di Kantor Pemasaran Gerbang Utama. Informasi unit dijamin akurat sesuai standar kantor pengembang.";
       } else if (lower.includes("shm") || lower.includes("sertifikat") || lower.includes("pbg")) {
-        reply = "Legalitas kavling kami 100% aman: Sertifikat Hak Milik (SHM) sudah pecah per kavling (bukan induk) dan IMB/PBG sudah diterbitkan Pemda setempat. Berkas fisik dapat dicek langsung.";
+        reply = "Legalitas kavling kami 100% tervalidasi: Sertifikat Hak Milik (SHM) sudah pecah murni per kavling (bukan sertifikat induk) dan Persetujuan Bangunan Gedung (PBG) resmi diterbitkan Pemda. Berkas asli dapat dicek langsung di kantor notaris rekanan kami.";
+      } else if (lower.includes("bertahap") || lower.includes("developer") || lower.includes("in-house") || lower.includes("inhouse")) {
+        reply = "Tersedia skema Cash Bertahap Developer (In-House) dengan tenor 12–24 bulan tanpa bunga (0%) dan tanpa proses BI Checking. Cukup membayar DP 30% dan menandatangani PPJB di hadapan Notaris resmi pengembang.";
       } else if (lower.includes("dp") || lower.includes("cicilan") || lower.includes("uang muka")) {
-        reply = "Uang muka (DP) mulai dari 0%-10% dan dapat dicicil hingga 3 kali selama masa pembangunan unit berlangsung. Promo bulan ini juga free biaya notaris & BPHTB!";
+        reply = "Uang muka (DP) mulai dari 0%–10% dan dapat dicicil hingga 3 kali selama masa pembangunan unit berlangsung. Promo bulan ini juga free biaya notaris & PPN ditanggung pemerintah!";
       }
     }
 
@@ -533,10 +541,10 @@ function sendDocumentAttachment(fileName, fileSize, caption) {
 
   // Auto-reply cerdas agen
   setTimeout(() => {
-    const isEstate = window.store.activeChatType === "ESTATE";
+    const userName = (window.store.buyerProfile && window.store.buyerProfile.fullName) ? window.store.buyerProfile.fullName : "Bapak/Ibu";
     const replyText = isEstate
-      ? `Terima kasih Ibu Ratna! Dokumen berkas "${fileName}" telah kami terima dan disematkan ke berkas perbaikan tiket ini.`
-      : `Terima kasih Bapak/Ibu! Dokumen berkas fisik "${fileName}" telah kami terima dengan baik. Tim administrasi kami akan segera memverifikasi kelengkapan syarat KPR ini ke analis perbankan rekanan.`;
+      ? `Terima kasih ${userName}! Dokumen berkas "${fileName}" telah kami terima dan disematkan ke berkas perbaikan tiket ini.`
+      : `Terima kasih ${userName}! Dokumen berkas fisik "${fileName}" telah kami terima dengan baik. Tim administrasi kami akan segera memverifikasi kelengkapan syarat KPR ini ke analis perbankan rekanan.`;
 
     window.store.chatHistory.push({
       sender: "agent",

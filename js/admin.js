@@ -264,11 +264,11 @@ function renderAdminUnitsTable() {
       </td>
       <td>
         <div>${u.type}</div>
-        <div style="font-size: 0.65rem; color: #64748b;">LB: ${u.lb}m² • LT: ${u.lt}m²</div>
+        <div style="font-size: 0.65rem; color: #64748b;">L. Bangunan: ${u.lb}m² • L. Tanah: ${u.lt}m²</div>
       </td>
       <td>
         <div style="font-weight: 800; color: #0f172a;">${u.price}</div>
-        <div style="font-size: 0.65rem; color: #10b981; font-weight: 600;">${u.financingRules ? u.financingRules.promoDp : 'Promo DP'}</div>
+        <div style="font-size: 0.65rem; color: #2563eb; font-weight: 700;">${u.financingRules ? u.financingRules.promoDp : 'Promo DP'}</div>
       </td>
       <td>
         <select class="status-select-control" onchange="updateUnitStatusFromAdmin('${u.id}', this.value)">
@@ -435,13 +435,13 @@ function renderBookingQueue() {
       <div class="verify-unit-info">
         <div><strong>Kavling:</strong> ${u.code} • ${u.cluster}</div>
         <div><strong>Harga:</strong> ${u.price} • Skema KPR Bank</div>
-        <div style="color: #10b981; font-weight: 700; margin-top: 2px;">✓ Tanda Jadi Booking Fee Rp 2.000.000 (Tervalidasi)</div>
+        <div style="color: #2563eb; font-weight: 700; margin-top: 2px;">✓ Tanda Jadi Booking Fee Rp 2.000.000 (Tervalidasi)</div>
       </div>
       <div class="verify-actions-row">
         <button type="button" class="btn-admin-action primary" onclick="approveBuyerBooking('${u.id}')" title="Sahkan berkas KPR dan ubah kavling menjadi SOLD">
           ✓ Lolos KPR
         </button>
-        <button type="button" class="btn-admin-action" style="background: #166534; color: #ffffff;" onclick="openBastVerifyModal('${u.id}')" title="Verifikasi BAST & KTP untuk aktivasi Portal Warga">
+        <button type="button" class="btn-admin-action" style="background: #1e40af; color: #ffffff;" onclick="openBastVerifyModal('${u.id}')" title="Verifikasi BAST & KTP untuk aktivasi Portal Warga">
           📜 Validasi BAST & KTP
         </button>
         <button type="button" class="btn-admin-action chat" onclick="openChatFromAdminWithBuyer('${u.id}')" title="Buka obrolan langsung dengan calon pembeli">
@@ -558,8 +558,8 @@ function renderAdminTicketsTable() {
         <div style="font-size: 0.65rem; color: #64748b;">${c.date}</div>
       </td>
       <td>
-        <div style="font-weight: 700;">Ibu Ratna (${c.unit})</div>
-        <div style="font-size: 0.65rem; color: #10b981; font-weight: 600;">Kategori: ${c.category}</div>
+        <div style="font-weight: 700;">${c.residentName || (window.store.buyerProfile ? window.store.buyerProfile.fullName : "Rizky Pratama")} (${c.unit})</div>
+        <div style="font-size: 0.65rem; color: #2563eb; font-weight: 700;">Kategori: ${c.category}</div>
       </td>
       <td style="max-width: 200px;">
         <div style="font-weight: 600; color: #1e293b; font-size: 0.74rem;">${c.notes}</div>
@@ -739,10 +739,11 @@ function openBapModal(ticketId) {
   const modal = document.getElementById("adminBapModal");
 
   if (target) {
+    const residentName = t.residentName || (window.store.buyerProfile ? window.store.buyerProfile.fullName : "Rizky Pratama");
     target.innerHTML = `
       <div><strong>Nomor Berkas BAP:</strong> BAP/ESTATE/${t.id}/2026</div>
       <div><strong>Tanggal Pengerjaan:</strong> ${new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
-      <div><strong>Unit Kavling:</strong> ${t.unit} (Ibu Ratna) • Sentral Garden Residence</div>
+      <div><strong>Unit Kavling:</strong> ${t.unit} (${residentName}) • Sentral Garden Residence</div>
       <div style="margin-top: 8px; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
         <strong>Uraian Pekerjaan Fisik:</strong><br>
         "${t.notes}"<br>
@@ -752,6 +753,11 @@ function openBapModal(ticketId) {
         🛡️ Klaim Garansi Retensi Pengembang: DISETUJUI (BEBAS BIAYA 100%)
       </div>
     `;
+
+    const bapResidentEl = document.getElementById("bapResidentSignName");
+    if (bapResidentEl) {
+      bapResidentEl.innerText = `${residentName} (${t.unit || 'Blok B-05'})`;
+    }
   }
 
   if (modal) modal.style.display = "flex";

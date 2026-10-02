@@ -9,10 +9,20 @@ class AppController {
 
   init() {
     initInterviewNotes();
+    const greetEl = document.getElementById("userGreetingNameDisplay");
+    if (greetEl && window.store.buyerProfile) {
+      greetEl.innerText = `${window.store.buyerProfile.fullName} (${window.store.buyerProfile.age} th)`;
+    }
+    if (typeof updateResidentProfileDisplay === "function") updateResidentProfileDisplay();
     renderCatalog();
     renderResidentTickets();
     if (typeof renderGuideScreen === "function") renderGuideScreen();
     this.switchView("viewCatalog", "Katalog Kavling", false);
+
+    // Inisialisasi status autentikasi pendaftaran & login sebelum beranda (Pinterest Pin Ref: pin.it/3tHkdsn3K)
+    if (typeof initAuth === "function") {
+      initAuth();
+    }
   }
 
   switchView(screenId, title = "Huniku", allowBack = false) {
@@ -31,6 +41,39 @@ class AppController {
 
     const viewport = document.getElementById("appScrollViewport");
     if (viewport) viewport.scrollTop = 0;
+
+    // SINKRONISASI BADGE PERAN & ROLE STUDIO DENGAN VIEW YANG AKTIF
+    const roleBadge = document.getElementById("headerRoleBadge");
+    const btnBuyer = document.getElementById("btnRoleBuyer");
+    const btnResident = document.getElementById("btnRoleResident");
+    const btnAdmin = document.getElementById("btnRoleAdmin");
+
+    if (screenId === "viewCatalog" || screenId === "viewUnitDetail") {
+      if (roleBadge) roleBadge.innerText = "Pencarian Unit";
+      if (btnBuyer) btnBuyer.classList.add("active");
+      if (btnResident) btnResident.classList.remove("active");
+      if (btnAdmin) btnAdmin.classList.remove("active");
+      window.store.role = "BUYER";
+    } else if (screenId === "viewGuideChecklist") {
+      if (roleBadge) roleBadge.innerText = "Panduan Berkas";
+    } else if (screenId === "viewInAppChat") {
+      if (roleBadge) roleBadge.innerText = window.store.activeChatType === "ESTATE" ? "CS Pemeliharaan" : "Konsultasi CS";
+    } else if (screenId === "viewResidentDesk") {
+      if (roleBadge) roleBadge.innerText = "Portal Warga";
+      if (btnBuyer) btnBuyer.classList.remove("active");
+      if (btnResident) btnResident.classList.add("active");
+      if (btnAdmin) btnAdmin.classList.remove("active");
+      window.store.role = "RESIDENT";
+      if (typeof updateResidentProfileDisplay === "function") {
+        updateResidentProfileDisplay();
+      }
+    } else if (screenId === "viewAdminMaster") {
+      if (roleBadge) roleBadge.innerText = "Admin Estate";
+      if (btnAdmin) btnAdmin.classList.add("active");
+      if (btnBuyer) btnBuyer.classList.remove("active");
+      if (btnResident) btnResident.classList.remove("active");
+      window.store.role = "ADMIN";
+    }
 
     this.updateBottomTabs(screenId);
     if (screenId === "viewGuideChecklist") {

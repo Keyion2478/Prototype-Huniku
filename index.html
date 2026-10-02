@@ -11,12 +11,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Modular CSS Architecture -->
-  <link rel="stylesheet" href="css/main.css?v=20261001_4">
-  <link rel="stylesheet" href="css/catalog.css?v=20261001_4">
-  <link rel="stylesheet" href="css/chat.css?v=20261001_4">
-  <link rel="stylesheet" href="css/resident.css?v=20261001_4">
-  <link rel="stylesheet" href="css/admin.css?v=20261001_4">
-  <link rel="stylesheet" href="css/companion.css?v=20261001_4">
+  <link rel="stylesheet" href="css/main.css?v=20261002_2">
+  <link rel="stylesheet" href="css/auth.css?v=20261002_2">
+  <link rel="stylesheet" href="css/catalog.css?v=20261002_2">
+  <link rel="stylesheet" href="css/chat.css?v=20261002_2">
+  <link rel="stylesheet" href="css/resident.css?v=20261002_2">
+  <link rel="stylesheet" href="css/admin.css?v=20261002_2">
+  <link rel="stylesheet" href="css/companion.css?v=20261002_2">
 </head>
 <body>
 
@@ -48,6 +49,10 @@
         Panduan Riset
       </button>
 
+      <button class="btn-studio-tool" onclick="handleUserLogout()" title="Keluar Akun untuk menguji alur Login & Registrasi">
+        🔐 Ganti Akun
+      </button>
+
       <button class="btn-studio-tool" onclick="window.app.resetAllData()" title="Kembalikan data percontohan ke kondisi awal">
         Reset Data
       </button>
@@ -74,6 +79,367 @@
             <span style="font-family: var(--font-mono); font-size: 0.68rem;">5G • 98%</span>
           </div>
 
+          <!-- ============================================== -->
+          <!-- AUTHENTICATION & ONBOARDING (PINTEREST REF)    -->
+          <!-- ============================================== -->
+          <div id="authContainer" style="display: none; position: absolute; inset: 32px 0 0; z-index: 95; background: #ffffff;">
+
+            <!-- 1. AUTH SCREEN: WELCOME / SPLASH -->
+            <div class="auth-screen-view is-active" id="viewAuthWelcome">
+              <div class="auth-welcome-container">
+                <!-- Fluid Background Waves & 3D Orbs -->
+                <div class="auth-fluid-bg-wave-1"></div>
+                <div class="auth-fluid-bg-wave-2"></div>
+                <div class="auth-floating-orb auth-orb-1"></div>
+                <div class="auth-floating-orb auth-orb-2"></div>
+                <div class="auth-floating-orb auth-orb-3"></div>
+                <div class="auth-floating-orb auth-orb-4"></div>
+
+                <!-- Hero Copy -->
+                <div class="auth-welcome-hero">
+                  <div class="auth-brand-badge">
+                    <span>✨</span>
+                    <span>Huniku • Platform Properti Terpadu</span>
+                  </div>
+                  <h1>Welcome<br>Back!</h1>
+                  <p>Platform perumahan terpadu & terverifikasi bebas double booking di Bandar Lampung.</p>
+                </div>
+
+                <!-- Bottom Bar & Dual Switcher -->
+                <div>
+                  <div class="auth-welcome-bottom-bar">
+                    <button type="button" class="btn-welcome-tab" onclick="showAuthScreen('viewAuthLogin')">Sign in</button>
+                    <button type="button" class="btn-welcome-tab primary-white" onclick="showAuthScreen('viewAuthRegister')">Sign up</button>
+                  </div>
+                  <div style="text-align: center;">
+                    <button type="button" class="btn-welcome-guest" onclick="continueAsGuest()">
+                      Jelajahi Dulu Sebagai Tamu (Guest) →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. AUTH SCREEN: LOGIN (SIGN IN) -->
+            <div class="auth-screen-view" id="viewAuthLogin">
+              <div class="auth-form-screen-wrap">
+                <!-- Fluid Background Waves & Orbs -->
+                <div class="auth-fluid-bg-wave-1" style="opacity: 0.7;"></div>
+                <div class="auth-floating-orb auth-orb-1" style="top: 20px; left: 10px;"></div>
+                <div class="auth-floating-orb auth-orb-2" style="top: 40px; right: 20px; width: 65px; height: 65px;"></div>
+
+                <!-- Top Header Bar -->
+                <div class="auth-form-top-header">
+                  <button type="button" class="btn-auth-back" onclick="showAuthScreen('viewAuthWelcome')">
+                    ‹ Back
+                  </button>
+                </div>
+
+                <!-- Sliding White Bottom Sheet Card -->
+                <div class="auth-sliding-card">
+                  <h2 class="auth-form-title">Welcome back</h2>
+                  <p class="auth-form-subtitle">Masuk untuk mengelola kavling, pengajuan berkas KPR, atau laporan warga.</p>
+
+                  <!-- Quick Demo One-Click Picker -->
+                  <div class="auth-demo-picker-box">
+                    <div class="auth-demo-picker-title">
+                      <span>⚡ Akses Cepat Simulasi Riset</span>
+                      <span style="font-size: 0.62rem; color: #3b82f6;">1-Klik Masuk</span>
+                    </div>
+                    <div class="auth-demo-chips">
+                      <button type="button" class="btn-demo-account-chip" onclick="loginAsDemoBuyer()">
+                        <span>👤 Calon Pembeli</span>
+                        <span>Rizky Pratama (29 th) →</span>
+                      </button>
+                      <button type="button" class="btn-demo-account-chip" onclick="loginAsDemoResident()">
+                        <span>🏡 Warga Penghuni</span>
+                        <span>Ibu Ratna (Blok B-05) →</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <form onsubmit="handleLoginSubmit(event)">
+                    <!-- Email / WA Field -->
+                    <div class="auth-field-group">
+                      <label class="auth-field-label" for="loginIdentifier">Email atau No. WhatsApp <span class="required-star">*</span></label>
+                      <input type="text" class="auth-input-pill" id="loginIdentifier" placeholder="cth: rizky@example.com / 0812-xxxx" value="rizky.pratama@example.com" required>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="auth-field-group">
+                      <label class="auth-field-label" for="loginPassword">Kata Sandi <span class="required-star">*</span></label>
+                      <div class="auth-password-wrapper">
+                        <input type="password" class="auth-input-pill" id="loginPassword" placeholder="Masukkan kata sandi akun" value="12345678" required>
+                        <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('loginPassword', this)" title="Tampilkan Kata Sandi">👁️</button>
+                      </div>
+                    </div>
+
+                    <!-- Remember & Forgot -->
+                    <div class="auth-remember-row">
+                      <label class="auth-custom-checkbox">
+                        <input type="checkbox" id="loginRememberMe" checked>
+                        <span>Ingat saya di perangkat ini</span>
+                      </label>
+                      <a class="auth-forgot-link" onclick="window.app.showToast('Gunakan akses cepat 1-klik untuk simulasi.')">Lupa password?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-auth-submit-pill">
+                      <span>Sign in</span>
+                      <span>→</span>
+                    </button>
+                  </form>
+
+                  <!-- Social Logins -->
+                  <div class="auth-social-divider">Sign in with</div>
+                  <div class="auth-social-buttons-row">
+                    <button type="button" class="btn-auth-social-circle" onclick="loginAsDemoBuyer()" title="Google Sign-In">
+                      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                    </button>
+                    <button type="button" class="btn-auth-social-circle" onclick="window.app.showToast('Apple ID Sign-in siap')" title="Apple ID">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.38c.62-.75 1.04-1.8 1.01-2.85-.9.04-2 .6-2.65 1.34-.56.63-.97 1.7-1.01 2.76 1.01.08 2.03-.5 2.65-1.25z"/></svg>
+                    </button>
+                  </div>
+
+                  <!-- Footer Switcher -->
+                  <div class="auth-form-footer-prompt">
+                    Don't have an account? <a onclick="showAuthScreen('viewAuthRegister')">Sign up</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. AUTH SCREEN: REGISTER (SIGN UP) -->
+            <div class="auth-screen-view" id="viewAuthRegister">
+              <div class="auth-form-screen-wrap">
+                <!-- Fluid Background Waves & Orbs -->
+                <div class="auth-fluid-bg-wave-1" style="opacity: 0.7;"></div>
+                <div class="auth-floating-orb auth-orb-1" style="top: 20px; left: 10px;"></div>
+                <div class="auth-floating-orb auth-orb-2" style="top: 40px; right: 20px; width: 65px; height: 65px;"></div>
+
+                <!-- Top Header Bar -->
+                <div class="auth-form-top-header">
+                  <button type="button" class="btn-auth-back" onclick="showAuthScreen('viewAuthWelcome')">
+                    ‹ Back
+                  </button>
+                </div>
+
+                <!-- Sliding White Bottom Sheet Card -->
+                <div class="auth-sliding-card">
+                  <h2 class="auth-form-title">Daftar Akun Baru</h2>
+                  <p class="auth-form-subtitle" id="regFormSubtitle">Lengkapi profil pendaftaran berstandar perbankan (KYC) untuk verifikasi kavling bebas double booking & pengajuan KPR.</p>
+
+                  <!-- Quick Demo Autofill Simulator for Research & Testing -->
+                  <div class="auth-demo-picker-box" style="margin-bottom: 14px;">
+                    <div class="auth-demo-picker-title">
+                      <span>⚡ Isi Cepat Simulasi Riset</span>
+                      <span style="font-size: 0.62rem; color: #3b82f6;">1-Klik Autofill</span>
+                    </div>
+                    <div class="auth-demo-chips" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                      <button type="button" class="btn-demo-account-chip" onclick="fillRegisterDemoBuyer()">
+                        <span>👤 Calon Pembeli</span>
+                        <span style="font-size: 0.64rem;">Rizky (29 th)</span>
+                      </button>
+                      <button type="button" class="btn-demo-account-chip" onclick="fillRegisterDemoResident()">
+                        <span>🏡 Warga Penghuni</span>
+                        <span style="font-size: 0.64rem;">Ratna (B-05)</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <form onsubmit="handleRegisterSubmit(event)">
+                    <!-- Role Selector -->
+                    <div class="auth-field-group">
+                      <label class="auth-field-label">Daftar Akun Sebagai: <span class="required-star">*</span></label>
+                      <div class="auth-role-segmented-box">
+                        <button type="button" class="btn-auth-role-choice active" id="btnRoleBuyer" onclick="selectAuthRole('BUYER', this)">🏠 Calon Pembeli</button>
+                        <button type="button" class="btn-auth-role-choice" id="btnRoleResident" onclick="selectAuthRole('RESIDENT', this)">🏡 Warga Penghuni</button>
+                      </div>
+                    </div>
+
+                    <!-- Nama Lengkap / Tuan Rumah -->
+                    <div class="auth-field-group">
+                      <label class="auth-field-label" id="regFullNameLabel" for="regFullName">Nama Lengkap (Sesuai e-KTP) <span class="required-star">*</span></label>
+                      <input type="text" class="auth-input-pill" id="regFullName" placeholder="cth: Rizky Pratama" value="Rizky Pratama" required>
+                    </div>
+
+                    <!-- Nomor WhatsApp -->
+                    <div class="auth-field-group">
+                      <label class="auth-field-label" for="regPhone">Nomor WhatsApp Aktif <span class="required-star">*</span></label>
+                      <input type="tel" class="auth-input-pill" id="regPhone" placeholder="cth: 0812-7890-1234" value="0812-7890-1234" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="auth-field-group">
+                      <label class="auth-field-label" for="regEmail">Alamat Email <span class="required-star">*</span></label>
+                      <input type="email" class="auth-input-pill" id="regEmail" placeholder="cth: rizky@example.com" value="rizky.pratama@example.com" required>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="auth-field-group">
+                      <label class="auth-field-label" for="regPassword">Kata Sandi (Min. 6 Karakter) <span class="required-star">*</span></label>
+                      <div class="auth-password-wrapper">
+                        <input type="password" class="auth-input-pill" id="regPassword" placeholder="Minimal 6 karakter" value="12345678" required>
+                        <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('regPassword', this)" title="Tampilkan Kata Sandi">👁️</button>
+                      </div>
+                    </div>
+
+                    <!-- KHUSUS PERAN: CALON PEMBELI (KYC PERBANKAN) -->
+                    <div id="regBuyerFields">
+                      <!-- Domisili Asal -->
+                      <div class="auth-field-group">
+                        <label class="auth-field-label" for="regDomicile">Alamat Domisili Asal Saat Ini <span class="required-star">*</span></label>
+                        <input type="text" class="auth-input-pill" id="regDomicile" placeholder="cth: Sukarame, Bandar Lampung" value="Sukarame, Bandar Lampung">
+                      </div>
+
+                      <!-- Dua Kolom: Pekerjaan & Usia -->
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="auth-field-group">
+                          <label class="auth-field-label" for="regOccupation">Jenis Pekerjaan</label>
+                          <select class="auth-input-pill" id="regOccupation" style="cursor: pointer;">
+                            <option value="Karyawan Swasta" selected>Karyawan Swasta</option>
+                            <option value="PNS / Pegawai BUMN">PNS / BUMN</option>
+                            <option value="Wiraswasta / Usaha">Wiraswasta</option>
+                            <option value="Profesional / Mandiri">Profesional</option>
+                            <option value="TNI / POLRI">TNI / POLRI</option>
+                          </select>
+                        </div>
+                        <div class="auth-field-group">
+                          <label class="auth-field-label" for="regAge">Usia Pemohon</label>
+                          <input type="number" class="auth-input-pill" id="regAge" min="21" max="65" value="29" required>
+                          <div class="auth-field-tip">Syarat tenor KPR (maks 55-65 th)</div>
+                        </div>
+                      </div>
+
+                      <!-- Dua Kolom: Status Pernikahan & Penghasilan Bulanan -->
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="auth-field-group">
+                          <label class="auth-field-label" for="regMaritalStatus">Status Keluarga</label>
+                          <select class="auth-input-pill" id="regMaritalStatus" style="cursor: pointer;">
+                            <option value="Menikah (1 Kepala Keluarga)" selected>Menikah (1 KK)</option>
+                            <option value="Menikah (Joint Income Suami-Istri)">Joint Income</option>
+                            <option value="Belum Menikah (Lajang)">Belum Menikah</option>
+                            <option value="Cerai (Ada Tanggungan)">Cerai (Ada Anak)</option>
+                          </select>
+                          <div class="auth-field-tip">Syarat legalitas KPR bank</div>
+                        </div>
+                        <div class="auth-field-group">
+                          <label class="auth-field-label" for="regIncome">Penghasilan / Bln</label>
+                          <select class="auth-input-pill" id="regIncome" style="cursor: pointer;">
+                            <option value="4500000">Rp 4jt – 6jt</option>
+                            <option value="7500000" selected>Rp 6jt – 10jt</option>
+                            <option value="12500000">Rp 10jt – 15jt</option>
+                            <option value="20000000">> Rp 15jt</option>
+                          </select>
+                          <div class="auth-field-tip">Kesiapan rasio DSR cicilan</div>
+                        </div>
+                      </div>
+
+                      <!-- Rencana Skema Transaksi & Minat Tipe Unit -->
+                      <div class="auth-field-group">
+                        <label class="auth-field-label" for="regPlanPreference">Rencana Pembayaran & Minat Unit</label>
+                        <select class="auth-input-pill" id="regPlanPreference" style="cursor: pointer;">
+                          <option value="KPR - Tipe 36 (Subsidi / Komersil)" selected>KPR Bank • Tipe 36 (Subsidi/Komersil)</option>
+                          <option value="KPR - Tipe 45 (Modern Minimalis)">KPR Bank • Tipe 45 (Modern Minimalis)</option>
+                          <option value="KPR - Tipe 54 (Eksklusif 2 Kamar)">KPR Bank • Tipe 54 (Eksklusif 2 Kamar)</option>
+                          <option value="Tunai Keras (Cash Keras)">Tunai Keras (Cash Keras Diskon)</option>
+                          <option value="Tunai Bertahap (Cash Bertahap)">Tunai Bertahap Developer</option>
+                        </select>
+                      </div>
+
+                      <!-- Bank Shield Note -->
+                      <div class="auth-bank-shield-box">
+                        <span>🔒</span>
+                        <div>
+                          <strong>Standar KYC Perbankan:</strong> Data ini digunakan untuk pra-kualifikasi KPR bank rekanan dan autofill otomatis saat pemesanan kavling bebas double booking.
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- KHUSUS PERAN: WARGA PENGHUNI (DATA KAVLING & FASILITAS) -->
+                    <div id="regResidentFields" style="display: none;">
+                      <!-- Kawasan Perumahan -->
+                      <div class="auth-field-group">
+                        <label class="auth-field-label" for="regResidentCluster">Kawasan Perumahan yang Dihuni <span class="required-star">*</span></label>
+                        <select class="auth-input-pill" id="regResidentCluster" style="cursor: pointer;">
+                          <option value="Sentral Garden Residence" selected>Sentral Garden Residence (Natar)</option>
+                          <option value="Grand Alessandra Residence">Grand Alessandra Residence (Sukarame)</option>
+                          <option value="Villa Permata Indah">Villa Permata Indah (Kedaton)</option>
+                        </select>
+                      </div>
+
+                      <!-- Dua Kolom: Nomor Blok Kavling & Status Kepemilikan -->
+                      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div class="auth-field-group">
+                          <label class="auth-field-label" for="regResidentUnit">Blok & No. Kavling <span class="required-star">*</span></label>
+                          <input type="text" class="auth-input-pill" id="regResidentUnit" placeholder="cth: Blok B-05" value="Kavling Blok B-05">
+                        </div>
+                        <div class="auth-field-group">
+                          <label class="auth-field-label" for="regResidentOwnership">Status Hunian</label>
+                          <select class="auth-input-pill" id="regResidentOwnership" style="cursor: pointer;">
+                            <option value="Pemilik Utama / Tuan Rumah" selected>Pemilik / Tuan Rumah</option>
+                            <option value="Pasangan / Keluarga Pemilik">Keluarga Pemilik</option>
+                            <option value="Penyewa Resmi">Penyewa Resmi</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <!-- Status Garansi Retensi Pengembang -->
+                      <div class="auth-field-group">
+                        <label class="auth-field-label" for="regResidentWarranty">Status Garansi Retensi Pemeliharaan</label>
+                        <select class="auth-input-pill" id="regResidentWarranty" style="cursor: pointer;">
+                          <option value="GARANSI_AKTIF" selected>Unit Baru (&lt; 6 Bulan - Garansi Retensi Aktif 180 Hari)</option>
+                          <option value="GARANSI_SELESAI">&gt; 6 Bulan (Pemeliharaan Mandiri / Pasca-Garansi)</option>
+                        </select>
+                      </div>
+
+                      <!-- Resident Shield Note -->
+                      <div class="auth-bank-shield-box" style="background: #f0fdf4; border-color: #bbf7d0; color: #166534;">
+                        <span>🏡</span>
+                        <div>
+                          <strong>Autofill Tiket Keluhan:</strong> Data kavling Anda otomatis tersinkronisasi pada formulir pelaporan kerusakan fasilitas berfoto dan histori perbaikan.
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Checkbox Consent -->
+                    <div style="margin: 8px 0 16px;">
+                      <label class="auth-custom-checkbox" style="align-items: flex-start;">
+                        <input type="checkbox" id="regAgreeConsent" checked style="margin-top: 2px;">
+                        <span style="font-size: 0.7rem; line-height: 1.45; color: #475569;">
+                          Saya menyetujui pemrosesan data profil perbankan (KYC) dan transaksi perumahan resmi bebas double booking sesuai SOP kemitraan pengembang dan bank rekanan.
+                        </span>
+                      </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-auth-submit-pill">
+                      <span>Daftar Akun Sekarang</span>
+                      <span>→</span>
+                    </button>
+                  </form>
+
+                  <!-- Social Logins -->
+                  <div class="auth-social-divider">Sign up with</div>
+                  <div class="auth-social-buttons-row">
+                    <button type="button" class="btn-auth-social-circle" onclick="loginAsDemoBuyer()" title="Daftar dengan Google">
+                      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                    </button>
+                    <button type="button" class="btn-auth-social-circle" onclick="window.app.showToast('Apple ID Sign-in siap')" title="Daftar dengan Apple">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.38c.62-.75 1.04-1.8 1.01-2.85-.9.04-2 .6-2.65 1.34-.56.63-.97 1.7-1.01 2.76 1.01.08 2.03-.5 2.65-1.25z"/></svg>
+                    </button>
+                  </div>
+
+                  <!-- Footer Switcher -->
+                  <div class="auth-form-footer-prompt">
+                    Sudah punya akun? <a onclick="showAuthScreen('viewAuthLogin')">Sign in</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
           <!-- App Top Header Strip -->
           <div class="app-header-strip">
             <div class="app-brand-lockup">
@@ -90,27 +456,122 @@
             <!-- ============================================== -->
             <!-- 1. VIEW: BUYER CATALOG                        -->
             <!-- ============================================== -->
+            <!-- ============================================== -->
+            <!-- 1. VIEW: BUYER CATALOG (PINTEREST 'AFTER' UI) -->
+            <!-- ============================================== -->
             <section class="view-screen is-active" id="viewCatalog">
-              <div class="editorial-hero">
-                <div class="region-indicator">Kawasan Percontohan Lampung</div>
-                <h3>Pilih Hunian Asri Bebas Risiko Double Booking.</h3>
-                <p>Status ketersediaan unit diverifikasi langsung oleh kantor pemasaran pengembang. Panduan berkas transparan & terhubung ke agen resmi melalui In-App Chat.</p>
+              
+              <!-- 1. TOP USER GREETING & NOTIFICATION BAR -->
+              <div class="user-greeting-bar">
+                <div class="user-profile-meta" onclick="openBuyerProfileModal()" style="cursor: pointer;">
+                  <div class="user-avatar-circle">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" alt="Avatar">
+                  </div>
+                  <div>
+                    <div class="greeting-subtitle">Hello 👋</div>
+                    <div class="greeting-name" id="userGreetingNameDisplay">Rizky Pratama</div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <button type="button" class="user-kyc-badge-btn" onclick="openBuyerProfileModal()" title="Profil KYC Perbankan">
+                    <span>👤 Profil KYC</span>
+                  </button>
+                  <button type="button" class="btn-user-notif" onclick="window.app.showToast('Semua kavling terverifikasi resmi')">
+                    🔔
+                    <span class="user-notif-dot">2</span>
+                  </button>
+                </div>
               </div>
 
-              <!-- Filter Bar -->
-              <div class="catalog-filter-bar">
-                <button class="pill-filter is-active" onclick="setCatalogFilter('ALL', this)">Semua Unit</button>
-                <button class="pill-filter" onclick="setCatalogFilter('AVAILABLE', this)">Hanya Tersedia</button>
-                <button class="pill-filter" onclick="setCatalogFilter('TIPE_36', this)">Tipe 36</button>
-                <button class="pill-filter" onclick="setCatalogFilter('TIPE_45', this)">Tipe 45</button>
-                <button class="pill-filter" onclick="setCatalogFilter('TIPE_54', this)">Tipe 54</button>
+              <!-- 2. MODERN SEARCH BAR PILL -->
+              <div class="catalog-search-box-wrap">
+                <div class="catalog-search-input-pill">
+                  <svg width="18" height="18" fill="none" stroke="#64748b" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                  <input type="text" id="buyerCatalogSearch" placeholder="Cari kavling, tipe, atau kawasan..." oninput="filterCatalogByKeyword(this.value)">
+                  <button type="button" class="btn-search-slider-filter" onclick="toggleCatalogSort()" title="Urutkan Harga & Luas Tanah">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h6"/></svg>
+                  </button>
+                </div>
               </div>
 
-              <!-- Units Flow Container -->
+              <!-- 3. CIRCULAR CATEGORY NAVIGATION (3 CLUSTERS & SITE PLAN) -->
+              <div class="category-circles-scroll">
+                <div class="cat-circle-item active" onclick="setCatalogCircleProject('ALL', this)">
+                  <div class="cat-icon-circle">🏠</div>
+                  <span>Semua</span>
+                </div>
+                <div class="cat-circle-item" onclick="setCatalogCircleProject('grand-alessandra', this)">
+                  <div class="cat-icon-circle">🌴</div>
+                  <span>Sukarame</span>
+                </div>
+                <div class="cat-circle-item" onclick="setCatalogCircleProject('sentral-garden', this)">
+                  <div class="cat-icon-circle">🌿</div>
+                  <span>Natar</span>
+                </div>
+                <div class="cat-circle-item" onclick="setCatalogCircleProject('villa-permata', this)">
+                  <div class="cat-icon-circle">🏙️</div>
+                  <span>Kedaton</span>
+                </div>
+                <div class="cat-circle-item" id="catCircleSitePlan" onclick="toggleSitePlanFromCircle(this)">
+                  <div class="cat-icon-circle">🗺️</div>
+                  <span>Site Plan</span>
+                </div>
+              </div>
+
+              <!-- 4. ROYAL BLUE PROMO / ASSURANCE BANNER (PINTEREST AFTER STYLE) -->
+              <div class="promo-hero-card">
+                <div class="promo-hero-content">
+                  <span class="promo-tag-pill">Huniku Verified Network</span>
+                  <h4>Kavling Resmi Bebas Double Booking</h4>
+                  <p>3 proyek perumahan di Lampung dengan penguncian kavling atomik real-time.</p>
+                  <button type="button" class="btn-promo-action" onclick="openChatWithSales()">
+                    Chat CS Pemasaran
+                  </button>
+                </div>
+                <div class="promo-hero-artwork">
+                  <div class="promo-gift-badge">
+                    <span class="gift-icon">🏡</span>
+                    <span class="gift-sub">Kunci Real-Time</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 5. QUICK SEGMENTED FILTER TABS -->
+              <div class="quick-filter-segment-row">
+                <div class="filter-pills-left" id="catalogFilterPills">
+                  <button type="button" class="filter-segment-pill active" onclick="setCatalogFilter('ALL', this)">Semua Unit</button>
+                  <button type="button" class="filter-segment-pill" onclick="setCatalogFilter('AVAILABLE', this)">Tersedia</button>
+                  <button type="button" class="filter-segment-pill" onclick="setCatalogFilter('TIPE_36', this)">Tipe 36</button>
+                  <button type="button" class="filter-segment-pill" onclick="setCatalogFilter('TIPE_45', this)">Tipe 45</button>
+                  <button type="button" class="filter-segment-pill" onclick="setCatalogFilter('TIPE_54', this)">Tipe 54</button>
+                  <button type="button" class="filter-segment-pill" onclick="setCatalogFilter('SIAP_HUNI', this)">Siap Huni</button>
+                  <button type="button" class="filter-segment-pill" onclick="setCatalogFilter('SITA_BANK', this)">Di Sita Bank</button>
+                </div>
+              </div>
+
+              <!-- 6. FEATURED LISTINGS HEADER & SORT -->
+              <div class="featured-listings-header">
+                <div>
+                  <h3 id="catalogSectionTitle">Kavling Pilihan</h3>
+                  <span class="see-all-link" id="catalogAvailableCountBadge">70 Kavling Tersedia</span>
+                </div>
+                <button type="button" class="btn-sort-catalog" onclick="toggleCatalogSort()" title="Urutkan Harga & Luas Tanah">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="m3 16 4 4 4-4M7 20V4m14 4-4-4-4 4m4-4v16"/></svg>
+                  <span id="sortCatalogLabel">Urutkan</span>
+                </button>
+              </div>
+
+              <!-- 2D Interactive Site Plan Container (Toggled via circular icon) -->
+              <div id="catalogSitePlanSection" style="display: none; padding: 0 20px 14px;">
+                <div id="catalogSitePlanTarget"></div>
+              </div>
+
+              <!-- Units Flow Container (Cards) -->
               <div class="units-flow-container" id="catalogListTarget">
                 <!-- Dynamically populated by catalog.js -->
               </div>
             </section>
+
 
             <!-- ============================================== -->
             <!-- 2. VIEW: UNIT DETAIL & SPECS                   -->
@@ -256,7 +717,7 @@
               <!-- Detail Action Bar -->
               <div class="sticky-action-dock">
                 <button class="btn-action-outline" onclick="openChatWithSales()">
-                  Tanya Sales Lapangan
+                  Chat CS Pemasaran
                 </button>
                 <button class="btn-action-primary" id="btnLaunchBooking" onclick="openBookingDialog()">
                   Booking Unit Ini
@@ -799,12 +1260,17 @@
             <section class="view-screen" id="viewResidentDesk">
               <!-- Resident Profile Banner -->
               <div class="resident-profile-banner">
-                <div>
-                  <div style="font-size: 0.68rem; color: var(--text-tertiary); font-weight: 700; text-transform: uppercase;">Penghuni Terverifikasi</div>
-                  <div style="font-size: 0.92rem; font-weight: 800; color: var(--text-main);">Ibu Ratna • Kavling Blok B-05</div>
-                  <div style="font-size: 0.72rem; color: var(--brand-accent); font-weight: 600;">Sentral Garden Residence</div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                  <div class="user-avatar-circle" style="width: 42px; height: 42px; flex-shrink: 0; overflow: hidden; border-radius: 50%; border: 2px solid #2563eb;">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&q=80" alt="Avatar" id="residentAvatarDisplay" style="width: 100%; height: 100%; object-fit: cover;">
+                  </div>
+                  <div>
+                    <div style="font-size: 0.68rem; color: var(--text-tertiary); font-weight: 700; text-transform: uppercase;">Penghuni Terverifikasi</div>
+                    <div style="font-size: 0.95rem; font-weight: 800; color: var(--text-main);" id="residentNameDisplay">Rizky Pratama • Kavling Blok B-05</div>
+                    <div style="font-size: 0.72rem; color: var(--brand-accent); font-weight: 600;" id="residentClusterDisplay">Sentral Garden Residence</div>
+                  </div>
                 </div>
-                <span class="badge-available" style="padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700;">🛡️ Garansi Aktif (142 Hari)</span>
+                <span class="badge-available" id="residentWarrantyBadge" style="padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 700;">🛡️ Garansi Aktif (142 Hari)</span>
               </div>
 
               <!-- Summary Metric Cards -->
@@ -1281,14 +1747,33 @@
           </div>
         </div>
 
+        <!-- KPR Age Qualification Alert Box (Proposal 2.3 & Notulensi) -->
+        <div id="kprAgeAlertBox" style="display: none; padding: 10px 12px; border: 1px solid #bfdbfe; border-radius: var(--radius-xs); margin-bottom: 14px; font-size: 0.72rem;"></div>
+
         <div class="form-field-unit">
           <label>Nama Lengkap Pemohon (Sesuai e-KTP):</label>
-          <input type="text" class="field-input-control" id="buyerNameField" placeholder="Contoh: Budi Santoso">
+          <input type="text" class="field-input-control" id="buyerNameField" placeholder="Contoh: Rizky Pratama">
         </div>
 
         <div class="form-field-unit">
           <label>Nomor WhatsApp Aktif:</label>
-          <input type="text" class="field-input-control" id="buyerPhoneField" placeholder="Contoh: 081234567890">
+          <input type="text" class="field-input-control" id="buyerPhoneField" placeholder="Contoh: 0812-7890-1234">
+        </div>
+
+        <div class="admin-form-grid-2" style="margin-bottom: 0;">
+          <div class="form-field-unit">
+            <label>Domisili Asal:</label>
+            <input type="text" class="field-input-control" id="buyerDomicileField" placeholder="Contoh: Sukarame, B. Lampung">
+          </div>
+          <div class="form-field-unit">
+            <label>Usia Pemohon (Tahun):</label>
+            <input type="number" class="field-input-control" id="buyerAgeField" placeholder="Contoh: 29" oninput="handleAgeFieldChange()">
+          </div>
+        </div>
+
+        <div class="form-field-unit">
+          <label>Pekerjaan / Sumber Penghasilan:</label>
+          <input type="text" class="field-input-control" id="buyerOccupationField" placeholder="Contoh: Karyawan Swasta / Wiraswasta">
         </div>
 
         <button class="btn-action-primary" style="width: 100%; margin-top: 6px;" onclick="executeAtomicLock()">
@@ -1320,12 +1805,87 @@
         </div>
 
         <button class="btn-action-primary" style="width: 100%;" onclick="forwardToAgentChat()">
-          Lanjut Chat Agen Resmi (Bawa Tiket)
+          Lanjut Chat CS Resmi (Bawa Tiket Booking)
         </button>
       </div>
 
     </div>
   </div>
+
+  <!-- MODAL: PROFIL NASABAH / BUYER KYC (PROPOSAL 2.3 & 3.4) -->
+  <div class="sheet-nordic-overlay" id="buyerKycModalOverlay" onclick="if(event.target === this) closeBuyerProfileModal()" style="display: none; position: fixed; inset: 0; background: rgba(11, 15, 20, 0.75); backdrop-filter: blur(8px); z-index: 2050; align-items: center; justify-content: center; padding: 16px 0;">
+    <div style="background: var(--surface-card); width: 92%; max-width: 440px; max-height: 90vh; overflow-y: auto; border-radius: var(--radius-md); padding: 22px; border: 1px solid var(--border-mid); box-shadow: var(--shadow-float); position: relative;">
+      
+      <!-- Close Button -->
+      <button onclick="closeBuyerProfileModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+        <div style="width: 40px; height: 40px; border-radius: 10px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+          👤
+        </div>
+        <div>
+          <h3 style="font-size: 1.05rem; font-weight: 800; color: var(--text-main);">Profil Calon Pembeli (KYC)</h3>
+          <p style="font-size: 0.7rem; color: var(--text-muted);">Data standar perbankan untuk autofill otomatis saat pemesanan unit</p>
+        </div>
+      </div>
+
+      <div class="form-field-unit">
+        <label>Nama Lengkap (Sesuai e-KTP):</label>
+        <input type="text" class="field-input-control" id="kycModalFullName" placeholder="Nama Lengkap">
+      </div>
+
+      <div class="form-field-unit">
+        <label>Nomor WhatsApp Aktif:</label>
+        <input type="text" class="field-input-control" id="kycModalPhone" placeholder="0812-xxxx-xxxx">
+      </div>
+
+      <div class="admin-form-grid-2">
+        <div class="form-field-unit">
+          <label>Domisili Asal:</label>
+          <input type="text" class="field-input-control" id="kycModalDomicile" placeholder="Kota/Kabupaten">
+        </div>
+        <div class="form-field-unit">
+          <label>Usia Pemohon (Tahun):</label>
+          <input type="number" class="field-input-control" id="kycModalAge" placeholder="Usia (contoh: 29)">
+        </div>
+      </div>
+
+      <div class="form-field-unit">
+        <label>Pekerjaan / Profesi:</label>
+        <input type="text" class="field-input-control" id="kycModalOccupation" placeholder="Pekerjaan saat ini">
+      </div>
+
+      <div class="form-field-unit">
+        <label>Estimasi Penghasilan Bulanan (Rp):</label>
+        <input type="number" class="field-input-control" id="kycModalIncome" placeholder="Contoh: 7500000">
+      </div>
+
+      <div class="form-field-unit">
+        <label>Status Pernikahan / Keluarga (KPR Bank):</label>
+        <select class="field-input-control" id="kycModalMarital">
+          <option value="Menikah (1 Kepala Keluarga)">Menikah (1 Kepala Keluarga)</option>
+          <option value="Menikah (Joint Income Suami-Istri)">Menikah (Joint Income Suami-Istri)</option>
+          <option value="Belum Menikah (Lajang)">Belum Menikah (Lajang)</option>
+          <option value="Cerai (Ada Tanggungan)">Cerai (Ada Tanggungan)</option>
+        </select>
+      </div>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; font-size: 0.68rem; color: #64748b; line-height: 1.4;">
+        🔒 <strong>Privasi Terjamin:</strong> Data profil ini disimpan aman di peramban Anda untuk mempercepat proses booking in-app dan pre-kualifikasi KPR bank rekanan tanpa perlu mengetik ulang berkali-kali.
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 14px; border-top: 1px solid #e2e8f0;">
+        <button type="button" onclick="handleUserLogout()" style="background: none; border: none; color: #ef4444; font-size: 0.74rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+          <span>🚪 Keluar Akun</span>
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn-switch-secondary" onclick="closeBuyerProfileModal()">Batal</button>
+          <button type="button" class="btn-action-primary" style="padding: 10px 18px;" onclick="saveBuyerProfileFromModal()">Simpan Profil KYC</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
   <!-- MODAL: SWITCH UNIT CONFIRMATION (KEBIJAKAN 1 AKUN 1 KAVLING AKTIF) -->
   <div class="sheet-nordic-overlay" id="switchUnitModalOverlay" onclick="if(event.target === this) closeSwitchUnitDialog()" style="display: none; position: fixed; inset: 0; background: rgba(11, 15, 20, 0.75); backdrop-filter: blur(8px); z-index: 2100; align-items: center; justify-content: center; padding: 16px 0;">
@@ -1691,7 +2251,7 @@
         </div>
         <div>
           <div style="color: #64748b;">Penghuni Kavling</div>
-          <div style="margin-top: 36px; font-weight: 800; color: #0f172a;">Ibu Ratna (Blok B-05)</div>
+          <div style="margin-top: 36px; font-weight: 800; color: #0f172a;" id="bapResidentSignName">Rizky Pratama (Blok B-05)</div>
           <div style="font-size: 0.62rem; color: #0284c7;">✓ Konsumen Sah</div>
         </div>
       </div>
@@ -1741,14 +2301,15 @@
   </div>
 
   <!-- Modular Scripts Architecture -->
-  <script src="js/store.js?v=20261001_6"></script>
-  <script src="js/catalog.js?v=20261001_6"></script>
-  <script src="js/booking.js?v=20261001_6"></script>
-  <script src="js/chat.js?v=20261001_6"></script>
-  <script src="js/resident.js?v=20261001_6"></script>
-  <script src="js/admin.js?v=20261001_6"></script>
-  <script src="js/companion.js?v=20261001_6"></script>
-  <script src="js/app.js?v=20261001_6"></script>
+  <script src="js/store.js?v=20261002_3"></script>
+  <script src="js/auth.js?v=20261002_3"></script>
+  <script src="js/catalog.js?v=20261002_3"></script>
+  <script src="js/booking.js?v=20261002_3"></script>
+  <script src="js/chat.js?v=20261002_3"></script>
+  <script src="js/resident.js?v=20261002_3"></script>
+  <script src="js/admin.js?v=20261002_3"></script>
+  <script src="js/companion.js?v=20261002_3"></script>
+  <script src="js/app.js?v=20261002_3"></script>
 
 </body>
 </html>

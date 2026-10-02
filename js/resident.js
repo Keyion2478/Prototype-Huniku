@@ -121,10 +121,14 @@ function submitComplaintForm() {
 
   const visitPreferenceCombined = `${finalDay} • ${finalSlot}`;
 
+  const activeName = (window.store.buyerProfile && window.store.buyerProfile.fullName) ? window.store.buyerProfile.fullName : "Rizky Pratama";
+  const activeUnit = (window.store.latestBooking && window.store.latestBooking.unit) ? window.store.latestBooking.unit : "BLOK B-05";
+
   const id = `TKT-2026-${Math.floor(100 + Math.random() * 900)}`;
   const newReport = {
     id: id,
-    unit: "BLOK B-05",
+    unit: activeUnit,
+    residentName: activeName,
     category: selectedComplaintCategory,
     notes: text,
     visitPreference: visitPreferenceCombined,
@@ -154,7 +158,30 @@ function submitComplaintForm() {
   }
 }
 
+function updateResidentProfileDisplay() {
+  const profile = (window.store && window.store.buyerProfile) ? window.store.buyerProfile : {};
+  const residentNameEl = document.getElementById("residentNameDisplay");
+  const residentClusterEl = document.getElementById("residentClusterDisplay");
+  const residentWarrantyBadge = document.getElementById("residentWarrantyBadge");
+
+  const name = profile.fullName || "Rizky Pratama";
+  const unit = (window.store && window.store.latestBooking) ? window.store.latestBooking.unit : (profile.residentUnit || "Kavling Blok B-05");
+  const cluster = (window.store && window.store.latestBooking) ? window.store.latestBooking.cluster : (profile.residentCluster || "Sentral Garden Residence");
+  const daysLeft = profile.warrantyDaysLeft || 142;
+
+  if (residentNameEl) {
+    residentNameEl.innerText = `${name} • ${unit}`;
+  }
+  if (residentClusterEl) {
+    residentClusterEl.innerText = cluster;
+  }
+  if (residentWarrantyBadge) {
+    residentWarrantyBadge.innerText = `🛡️ Garansi Aktif (${daysLeft} Hari)`;
+  }
+}
+
 function renderResidentTickets() {
+  updateResidentProfileDisplay();
   const container = document.getElementById("residentTicketsFeed");
   if (!container) return;
 
